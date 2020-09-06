@@ -1,0 +1,19 @@
+{
+  "name": "scrapper",
+  "version": "1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "isomorphic-unfetch": "^3.0.0",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "core-js": "^3.6.5",
+    "jest": "^26.4.2"
+  }
+}
