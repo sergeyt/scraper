@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   name: "macmillan",
   url: (q) => `https://www.macmillandictionary.com/dictionary/british/${q.text}`,
   plan: [
