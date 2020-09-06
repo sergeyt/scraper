@@ -22,7 +22,7 @@ function parse(source, html) {
         }
         content.add(text);
       });
-      data[item.term] = content;
+      data[item.term] = [...content];
     } else if (item.audio) {
       // TODO implement
     }
@@ -51,7 +51,10 @@ function makeParser(source) {
       .then((html) => {
         return parse(source, html);
       })
-      .catch((error) => ({ error }));
+      .catch((error) => {
+        console.log("error", source.name, error);
+        return { error };
+      });
   };
 }
 
