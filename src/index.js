@@ -9,10 +9,20 @@ import { strip } from "./utils";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 
-const sources = [
-  macmillan,
-  forvo,
-];
+function isNode() {
+  return (
+    Object.prototype.toString.call(
+      typeof process !== "undefined" ? process : 0
+    ) === "[object process]"
+  );
+}
+
+function isBrowser() {
+  return !isNode() && typeof window !== "undefined";
+}
+
+const IS_BROWSER = isBrowser();
+const sources = [macmillan, forvo];
 
 function parse(source, html, query) {
   const $ = cheerio.load(html);
@@ -87,7 +97,12 @@ function makeParser(source) {
   return (text, lang) => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
-    const url = source.makeUrl(query);
+    let url = source.makeUrl(query);
+
+    if (IS_BROWSER) {
+      url = `http://www.whateverorigin.org/get?url=${encodeURIComponent(url)}`;
+    }
+
     return fetch(url, {
       headers: {
         "User-Agent": "lingua-bot",
