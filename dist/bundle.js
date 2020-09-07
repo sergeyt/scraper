@@ -28965,7 +28965,79 @@ exports = module.exports = require('./lib/cheerio');
 */
 
 exports.version = require('./package.json').version;
-},{"./lib/cheerio":"r6Hg","./package.json":"PqKk"}],"Chbn":[function(require,module,exports) {
+},{"./lib/cheerio":"r6Hg","./package.json":"PqKk"}],"gGJU":[function(require,module,exports) {
+/**
+ * Checks if `value` is `null` or `undefined`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is nullish, else `false`.
+ * @example
+ *
+ * _.isNil(null);
+ * // => true
+ *
+ * _.isNil(void 0);
+ * // => true
+ *
+ * _.isNil(NaN);
+ * // => false
+ */
+function isNil(value) {
+  return value == null;
+}
+
+module.exports = isNil;
+
+},{}],"hwYF":[function(require,module,exports) {
+var baseAssignValue = require('./_baseAssignValue'),
+    baseForOwn = require('./_baseForOwn'),
+    baseIteratee = require('./_baseIteratee');
+
+/**
+ * Creates an object with the same keys as `object` and values generated
+ * by running each own enumerable string keyed property of `object` thru
+ * `iteratee`. The iteratee is invoked with three arguments:
+ * (value, key, object).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Object
+ * @param {Object} object The object to iterate over.
+ * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+ * @returns {Object} Returns the new mapped object.
+ * @see _.mapKeys
+ * @example
+ *
+ * var users = {
+ *   'fred':    { 'user': 'fred',    'age': 40 },
+ *   'pebbles': { 'user': 'pebbles', 'age': 1 }
+ * };
+ *
+ * _.mapValues(users, function(o) { return o.age; });
+ * // => { 'fred': 40, 'pebbles': 1 } (iteration order is not guaranteed)
+ *
+ * // The `_.property` iteratee shorthand.
+ * _.mapValues(users, 'age');
+ * // => { 'fred': 40, 'pebbles': 1 } (iteration order is not guaranteed)
+ */
+function mapValues(object, iteratee) {
+  var result = {};
+  iteratee = baseIteratee(iteratee, 3);
+
+  baseForOwn(object, function(value, key, object) {
+    baseAssignValue(result, key, iteratee(value, key, object));
+  });
+  return result;
+}
+
+module.exports = mapValues;
+
+},{"./_baseAssignValue":"d05L","./_baseForOwn":"xqjy","./_baseIteratee":"lW7l"}],"Chbn":[function(require,module,exports) {
 /**
  * The base implementation of `_.slice` without an iteratee call guard.
  *
@@ -29216,34 +29288,22 @@ function trim(string, chars, guard) {
 
 module.exports = trim;
 
-},{"./_baseToString":"w4yJ","./_castSlice":"Kr2C","./_charsEndIndex":"a8Tx","./_charsStartIndex":"of1r","./_stringToArray":"smkV","./toString":"A8RV"}],"gGJU":[function(require,module,exports) {
-/**
- * Checks if `value` is `null` or `undefined`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is nullish, else `false`.
- * @example
- *
- * _.isNil(null);
- * // => true
- *
- * _.isNil(void 0);
- * // => true
- *
- * _.isNil(NaN);
- * // => false
- */
-function isNil(value) {
-  return value == null;
+},{"./_baseToString":"w4yJ","./_castSlice":"Kr2C","./_charsEndIndex":"a8Tx","./_charsStartIndex":"of1r","./_stringToArray":"smkV","./toString":"A8RV"}],"FOZT":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.strip = strip;
+
+var _trim = _interopRequireDefault(require("lodash/trim"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function strip(s) {
+  return (0, _trim.default)(s === null || s === void 0 ? void 0 : s.trim(), "\u200B");
 }
-
-module.exports = isNil;
-
-},{}],"Ccud":[function(require,module,exports) {
+},{"lodash/trim":"GgRv"}],"Ccud":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29252,8 +29312,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _default = {
   name: "macmillan",
-  url: function url(q) {
-    return "https://www.macmillandictionary.com/dictionary/british/".concat(q.text);
+  url: "https://www.macmillandictionary.com",
+  makeUrl: function makeUrl(_ref) {
+    var text = _ref.text;
+    return "https://www.macmillandictionary.com/dictionary/british/".concat(text);
   },
   plan: [{
     selector: ".PRON",
@@ -29283,7 +29345,626 @@ var _default = {
   }]
 };
 exports.default = _default;
-},{}],"Focm":[function(require,module,exports) {
+},{}],"BBRi":[function(require,module,exports) {
+var baseKeys = require('./_baseKeys'),
+    getTag = require('./_getTag'),
+    isArguments = require('./isArguments'),
+    isArray = require('./isArray'),
+    isArrayLike = require('./isArrayLike'),
+    isBuffer = require('./isBuffer'),
+    isPrototype = require('./_isPrototype'),
+    isTypedArray = require('./isTypedArray');
+
+/** `Object#toString` result references. */
+var mapTag = '[object Map]',
+    setTag = '[object Set]';
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Checks if `value` is an empty object, collection, map, or set.
+ *
+ * Objects are considered empty if they have no own enumerable string keyed
+ * properties.
+ *
+ * Array-like values such as `arguments` objects, arrays, buffers, strings, or
+ * jQuery-like collections are considered empty if they have a `length` of `0`.
+ * Similarly, maps and sets are considered empty if they have a `size` of `0`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is empty, else `false`.
+ * @example
+ *
+ * _.isEmpty(null);
+ * // => true
+ *
+ * _.isEmpty(true);
+ * // => true
+ *
+ * _.isEmpty(1);
+ * // => true
+ *
+ * _.isEmpty([1, 2, 3]);
+ * // => false
+ *
+ * _.isEmpty({ 'a': 1 });
+ * // => false
+ */
+function isEmpty(value) {
+  if (value == null) {
+    return true;
+  }
+  if (isArrayLike(value) &&
+      (isArray(value) || typeof value == 'string' || typeof value.splice == 'function' ||
+        isBuffer(value) || isTypedArray(value) || isArguments(value))) {
+    return !value.length;
+  }
+  var tag = getTag(value);
+  if (tag == mapTag || tag == setTag) {
+    return !value.size;
+  }
+  if (isPrototype(value)) {
+    return !baseKeys(value).length;
+  }
+  for (var key in value) {
+    if (hasOwnProperty.call(value, key)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+module.exports = isEmpty;
+
+},{"./_baseKeys":"BNjb","./_getTag":"tQCT","./isArguments":"tilN","./isArray":"p0cq","./isArrayLike":"LN6c","./isBuffer":"iyC2","./_isPrototype":"nhsl","./isTypedArray":"kwIb"}],"FBd6":[function(require,module,exports) {
+var baseToString = require('./_baseToString'),
+    castSlice = require('./_castSlice'),
+    charsStartIndex = require('./_charsStartIndex'),
+    stringToArray = require('./_stringToArray'),
+    toString = require('./toString');
+
+/** Used to match leading and trailing whitespace. */
+var reTrimStart = /^\s+/;
+
+/**
+ * Removes leading whitespace or specified characters from `string`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category String
+ * @param {string} [string=''] The string to trim.
+ * @param {string} [chars=whitespace] The characters to trim.
+ * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
+ * @returns {string} Returns the trimmed string.
+ * @example
+ *
+ * _.trimStart('  abc  ');
+ * // => 'abc  '
+ *
+ * _.trimStart('-_-abc-_-', '_-');
+ * // => 'abc-_-'
+ */
+function trimStart(string, chars, guard) {
+  string = toString(string);
+  if (string && (guard || chars === undefined)) {
+    return string.replace(reTrimStart, '');
+  }
+  if (!string || !(chars = baseToString(chars))) {
+    return string;
+  }
+  var strSymbols = stringToArray(string),
+      start = charsStartIndex(strSymbols, stringToArray(chars));
+
+  return castSlice(strSymbols, start).join('');
+}
+
+module.exports = trimStart;
+
+},{"./_baseToString":"w4yJ","./_castSlice":"Kr2C","./_charsStartIndex":"of1r","./_stringToArray":"smkV","./toString":"A8RV"}],"jdTH":[function(require,module,exports) {
+var baseToString = require('./_baseToString'),
+    castSlice = require('./_castSlice'),
+    charsEndIndex = require('./_charsEndIndex'),
+    stringToArray = require('./_stringToArray'),
+    toString = require('./toString');
+
+/** Used to match leading and trailing whitespace. */
+var reTrimEnd = /\s+$/;
+
+/**
+ * Removes trailing whitespace or specified characters from `string`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category String
+ * @param {string} [string=''] The string to trim.
+ * @param {string} [chars=whitespace] The characters to trim.
+ * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
+ * @returns {string} Returns the trimmed string.
+ * @example
+ *
+ * _.trimEnd('  abc  ');
+ * // => '  abc'
+ *
+ * _.trimEnd('-_-abc-_-', '_-');
+ * // => '-_-abc'
+ */
+function trimEnd(string, chars, guard) {
+  string = toString(string);
+  if (string && (guard || chars === undefined)) {
+    return string.replace(reTrimEnd, '');
+  }
+  if (!string || !(chars = baseToString(chars))) {
+    return string;
+  }
+  var strSymbols = stringToArray(string),
+      end = charsEndIndex(strSymbols, stringToArray(chars)) + 1;
+
+  return castSlice(strSymbols, 0, end).join('');
+}
+
+module.exports = trimEnd;
+
+},{"./_baseToString":"w4yJ","./_castSlice":"Kr2C","./_charsEndIndex":"a8Tx","./_stringToArray":"smkV","./toString":"A8RV"}],"gEwE":[function(require,module,exports) {
+var Buffer = require("buffer").Buffer;
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Base64 = exports.extendBuiltins = exports.extendUint8Array = exports.extendString = exports.toUint8Array = exports.fromUint8Array = exports.btou = exports.encodeURL = exports.encodeURI = exports.utob = exports.encode = exports.toBase64 = exports.decode = exports.fromBase64 = exports.btoaPolyfill = exports.btoa = exports.atobPolyfill = exports.atob = exports.VERSION = exports.version = void 0;
+
+/**
+ *  base64.ts
+ *
+ *  Licensed under the BSD 3-Clause License.
+ *    http://opensource.org/licenses/BSD-3-Clause
+ *
+ *  References:
+ *    http://en.wikipedia.org/wiki/Base64
+ *
+ * @author Dan Kogai (https://github.com/dankogai)
+ */
+const version = '3.4.5';
+/**
+ * @deprecated use lowercase `version`.
+ */
+
+exports.version = version;
+const VERSION = version;
+exports.VERSION = VERSION;
+
+const _hasatob = typeof atob === 'function';
+
+const _hasbtoa = typeof btoa === 'function';
+
+const _hasBuffer = typeof Buffer === 'function';
+
+const b64ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+const b64chs = [...b64ch];
+
+const b64tab = (a => {
+  let tab = {};
+  a.forEach((c, i) => tab[c] = i);
+  return tab;
+})(b64chs);
+
+const b64re = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;
+
+const _fromCC = String.fromCharCode.bind(String);
+
+const _U8Afrom = typeof Uint8Array.from === 'function' ? Uint8Array.from.bind(Uint8Array) : (it, fn = x => x) => new Uint8Array(Array.prototype.slice.call(it, 0).map(fn));
+
+const _mkUriSafe = src => src.replace(/[+\/]/g, m0 => m0 == '+' ? '-' : '_').replace(/=+$/m, '');
+
+const _tidyB64 = s => s.replace(/[^A-Za-z0-9\+\/]/g, '');
+/**
+ * polyfill version of `btoa`
+ */
+
+
+const btoaPolyfill = bin => {
+  // console.log('polyfilled');
+  let u32,
+      c0,
+      c1,
+      c2,
+      asc = '';
+  const pad = bin.length % 3;
+
+  for (let i = 0; i < bin.length;) {
+    if ((c0 = bin.charCodeAt(i++)) > 255 || (c1 = bin.charCodeAt(i++)) > 255 || (c2 = bin.charCodeAt(i++)) > 255) throw new TypeError('invalid character found');
+    u32 = c0 << 16 | c1 << 8 | c2;
+    asc += b64chs[u32 >> 18 & 63] + b64chs[u32 >> 12 & 63] + b64chs[u32 >> 6 & 63] + b64chs[u32 & 63];
+  }
+
+  return pad ? asc.slice(0, pad - 3) + "===".substring(pad) : asc;
+};
+/**
+ * does what `window.btoa` of web browsers do.
+ * @param {String} bin binary string
+ * @returns {string} Base64-encoded string
+ */
+
+
+exports.btoaPolyfill = btoaPolyfill;
+
+const _btoa = _hasbtoa ? bin => btoa(bin) : _hasBuffer ? bin => Buffer.from(bin, 'binary').toString('base64') : btoaPolyfill;
+
+exports.btoa = _btoa;
+
+const _fromUint8Array = _hasBuffer ? u8a => Buffer.from(u8a).toString('base64') : u8a => {
+  // cf. https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string/12713326#12713326
+  const maxargs = 0x1000;
+  let strs = [];
+
+  for (let i = 0, l = u8a.length; i < l; i += maxargs) {
+    strs.push(_fromCC.apply(null, u8a.subarray(i, i + maxargs)));
+  }
+
+  return _btoa(strs.join(''));
+};
+/**
+ * converts a Uint8Array to a Base64 string.
+ * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 §5
+ * @returns {string} Base64 string
+ */
+
+
+const fromUint8Array = (u8a, urlsafe = false) => urlsafe ? _mkUriSafe(_fromUint8Array(u8a)) : _fromUint8Array(u8a);
+/**
+ * @deprecated should have been internal use only.
+ * @param {string} src UTF-8 string
+ * @returns {string} UTF-16 string
+ */
+
+
+exports.fromUint8Array = fromUint8Array;
+
+const utob = src => unescape(encodeURIComponent(src)); //
+
+
+exports.utob = utob;
+
+const _encode = _hasBuffer ? s => Buffer.from(s, 'utf8').toString('base64') : s => _btoa(utob(s));
+/**
+ * converts a UTF-8-encoded string to a Base64 string.
+ * @param {boolean} [urlsafe] if `true` make the result URL-safe
+ * @returns {string} Base64 string
+ */
+
+
+const encode = (src, urlsafe = false) => urlsafe ? _mkUriSafe(_encode(src)) : _encode(src);
+/**
+ * converts a UTF-8-encoded string to URL-safe Base64 RFC4648 §5.
+ * @returns {string} Base64 string
+ */
+
+
+exports.encode = exports.toBase64 = encode;
+
+const encodeURI = src => encode(src, true);
+/**
+ * @deprecated should have been internal use only.
+ * @param {string} src UTF-16 string
+ * @returns {string} UTF-8 string
+ */
+
+
+exports.encodeURL = exports.encodeURI = encodeURI;
+
+const btou = src => decodeURIComponent(escape(src));
+/**
+ * polyfill version of `atob`
+ */
+
+
+exports.btou = btou;
+
+const atobPolyfill = asc => {
+  // console.log('polyfilled');
+  asc = asc.replace(/\s+/g, '');
+  if (!b64re.test(asc)) throw new TypeError('malformed base64.');
+  asc += '=='.slice(2 - (asc.length & 3));
+  let u24,
+      bin = '',
+      r1,
+      r2;
+
+  for (let i = 0; i < asc.length;) {
+    u24 = b64tab[asc.charAt(i++)] << 18 | b64tab[asc.charAt(i++)] << 12 | (r1 = b64tab[asc.charAt(i++)]) << 6 | (r2 = b64tab[asc.charAt(i++)]);
+    bin += r1 === 64 ? _fromCC(u24 >> 16 & 255) : r2 === 64 ? _fromCC(u24 >> 16 & 255, u24 >> 8 & 255) : _fromCC(u24 >> 16 & 255, u24 >> 8 & 255, u24 & 255);
+  }
+
+  return bin;
+};
+/**
+ * does what `window.atob` of web browsers do.
+ * @param {String} asc Base64-encoded string
+ * @returns {string} binary string
+ */
+
+
+exports.atobPolyfill = atobPolyfill;
+
+const _atob = _hasatob ? asc => atob(_tidyB64(asc)) : _hasBuffer ? asc => Buffer.from(asc, 'base64').toString('binary') : atobPolyfill;
+
+exports.atob = _atob;
+
+const _decode = _hasBuffer ? a => Buffer.from(a, 'base64').toString('utf8') : a => btou(_atob(a));
+
+const _unURI = a => _tidyB64(a.replace(/[-_]/g, m0 => m0 == '-' ? '+' : '/'));
+/**
+ * converts a Base64 string to a UTF-8 string.
+ * @param {String} src Base64 string.  Both normal and URL-safe are supported
+ * @returns {string} UTF-8 string
+ */
+
+
+const decode = src => _decode(_unURI(src));
+/**
+ * converts a Base64 string to a Uint8Array.
+ */
+
+
+exports.decode = exports.fromBase64 = decode;
+const toUint8Array = _hasBuffer ? a => _U8Afrom(Buffer.from(_unURI(a), 'base64')) : a => _U8Afrom(_atob(_unURI(a)), c => c.charCodeAt(0));
+exports.toUint8Array = toUint8Array;
+
+const _noEnum = v => {
+  return {
+    value: v,
+    enumerable: false,
+    writable: true,
+    configurable: true
+  };
+};
+/**
+ * extend String.prototype with relevant methods
+ */
+
+
+const extendString = function () {
+  const _add = (name, body) => Object.defineProperty(String.prototype, name, _noEnum(body));
+
+  _add('fromBase64', function () {
+    return decode(this);
+  });
+
+  _add('toBase64', function (urlsafe) {
+    return encode(this, urlsafe);
+  });
+
+  _add('toBase64URI', function () {
+    return encode(this, true);
+  });
+
+  _add('toBase64URL', function () {
+    return encode(this, true);
+  });
+
+  _add('toUint8Array', function () {
+    return toUint8Array(this);
+  });
+};
+/**
+ * extend Uint8Array.prototype with relevant methods
+ */
+
+
+exports.extendString = extendString;
+
+const extendUint8Array = function () {
+  const _add = (name, body) => Object.defineProperty(Uint8Array.prototype, name, _noEnum(body));
+
+  _add('toBase64', function (urlsafe) {
+    return fromUint8Array(this, urlsafe);
+  });
+
+  _add('toBase64URI', function () {
+    return fromUint8Array(this, true);
+  });
+
+  _add('toBase64URL', function () {
+    return fromUint8Array(this, true);
+  });
+};
+/**
+ * extend Builtin prototypes with relevant methods
+ */
+
+
+exports.extendUint8Array = extendUint8Array;
+
+const extendBuiltins = () => {
+  extendString();
+  extendUint8Array();
+};
+
+exports.extendBuiltins = extendBuiltins;
+const gBase64 = {
+  version: version,
+  VERSION: VERSION,
+  atob: _atob,
+  atobPolyfill: atobPolyfill,
+  btoa: _btoa,
+  btoaPolyfill: btoaPolyfill,
+  fromBase64: decode,
+  toBase64: encode,
+  encode: encode,
+  encodeURI: encodeURI,
+  encodeURL: encodeURI,
+  utob: utob,
+  btou: btou,
+  decode: decode,
+  fromUint8Array: fromUint8Array,
+  toUint8Array: toUint8Array,
+  extendString: extendString,
+  extendUint8Array: extendUint8Array,
+  extendBuiltins: extendBuiltins
+}; // makecjs:CUT //
+
+exports.Base64 = gBase64;
+},{"buffer":"dskh"}],"uyfs":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _isEmpty = _interopRequireDefault(require("lodash/isEmpty"));
+
+var _trimStart = _interopRequireDefault(require("lodash/trimStart"));
+
+var _trimEnd = _interopRequireDefault(require("lodash/trimEnd"));
+
+var _jsBase = require("js-base64");
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AUDIO_HOST = "https://audio00.forvo.com/audios/mp3";
+var encode = encodeURIComponent;
+
+function unquote(s) {
+  if (s && s.startsWith("'")) {
+    return s.substr(1, s.length - 2);
+  }
+
+  return s;
+}
+
+function parse_fn(src) {
+  if (!src) {
+    return undefined;
+  }
+
+  var i = src.indexOf("(");
+  var j = src.indexOf(")");
+  var name = src.substr(0, i);
+  var a = src.substr(i + 1, j - i - 1).split(",");
+  var args = a.map(unquote);
+  return {
+    name: name,
+    args: args
+  };
+}
+
+function translate_gender(val) {
+  val = (0, _utils.strip)(val);
+
+  if (val === "\u0436\u0435\u043D\u0449\u0438\u043D\u0430") {
+    return "f";
+  }
+
+  if (val === "\u043C\u0443\u0436\u0447\u0438\u043D\u0430") {
+    return "m";
+  }
+
+  return val;
+}
+
+function translate_counry(val) {
+  val = (0, _utils.strip)(val); // r = dictcom.translate(val)
+  // if r is not None and len(r['tran']) > 0:
+  //     return r['tran'][0].lower()
+
+  return val;
+}
+
+function parse_from(s) {
+  if (!s) {
+    return undefined;
+  }
+
+  s = (0, _trimEnd.default)((0, _trimStart.default)(s, "("), ")");
+  var a = s.split(",");
+
+  if ((0, _isEmpty.default)(a)) {
+    return undefined;
+  }
+
+  var result = {
+    gender: translate_gender(a[0])
+  };
+
+  if (a.length === 2) {
+    result.country = translate_counry(a[1]);
+  }
+
+  return result;
+}
+
+var _default = {
+  name: "forvo",
+  url: "https://forvo.com",
+  makeUrl: function makeUrl(_ref) {
+    var text = _ref.text,
+        lang = _ref.lang;
+    return "https://ru.forvo.com/word/".concat(encode(text), "/#").concat(lang);
+  },
+  plan: [{
+    selector: "article.pronunciations ul.show-all-pronunciations li",
+    parse: function parse(elem) {
+      var btn = elem.find("span.play");
+
+      if (!btn) {
+        return undefined;
+      }
+
+      var fn = parse_fn(btn.attr("onclick"));
+
+      if (!fn || fn.name !== "Play") {
+        return undefined;
+      }
+
+      var rel = _jsBase.Base64.decode(fn["args"][4]);
+
+      var url = "".concat(AUDIO_HOST, "/").concat(rel);
+
+      if (!url.endsWith(".mp3")) {
+        return undefined;
+      }
+
+      var result = {
+        url: url
+      };
+      var author = elem.find("span.ofLink");
+
+      if (author && author.attr("data-p2")) {
+        result.author = author.attr("data-p2");
+      }
+
+      var from = elem.find("span.from");
+
+      if (from) {
+        var d = parse_from(from.text());
+
+        if (d) {
+          Object.assign(result, d);
+        }
+      }
+
+      return [{
+        audio: result
+      }];
+    }
+  }]
+};
+exports.default = _default;
+},{"lodash/isEmpty":"BBRi","lodash/trimStart":"FBd6","lodash/trimEnd":"jdTH","js-base64":"gEwE","../utils":"FOZT"}],"Focm":[function(require,module,exports) {
+var process = require("process");
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29295,13 +29976,19 @@ var _isomorphicUnfetch = _interopRequireDefault(require("isomorphic-unfetch"));
 
 var _cheerio = _interopRequireDefault(require("cheerio"));
 
-var _trim = _interopRequireDefault(require("lodash/trim"));
-
 var _isArray = _interopRequireDefault(require("lodash/isArray"));
 
 var _isNil = _interopRequireDefault(require("lodash/isNil"));
 
+var _forEach = _interopRequireDefault(require("lodash/forEach"));
+
+var _mapValues = _interopRequireDefault(require("lodash/mapValues"));
+
+var _utils = require("./utils");
+
 var _macmillan = _interopRequireDefault(require("./sources/macmillan"));
+
+var _forvo = _interopRequireDefault(require("./sources/forvo"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29319,21 +30006,31 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function strip(s) {
-  return (0, _trim.default)(s === null || s === void 0 ? void 0 : s.trim(), "\u200B");
+function isNode() {
+  return Object.prototype.toString.call(typeof process !== "undefined" ? process : 0) === "[object process]";
 }
+
+function isBrowser() {
+  return !isNode() && typeof window !== "undefined";
+}
+
+var IS_BROWSER = isBrowser();
+var sources = [_macmillan.default, _forvo.default];
 
 function parse(source, html, query) {
   var $ = _cheerio.default.load(html);
 
   var data = {};
 
-  var collect = function collect(key, item, extract) {
-    if (!data[key]) {
-      data[key] = [];
+  var ensureSet = function ensureSet(key) {
+    if (key && !data[key]) {
+      data[key] = new Set();
     }
+  };
 
-    var content = new Set(data[key]);
+  var collect = function collect(key, item, extract) {
+    ensureSet(key);
+    var content = key ? data[key] : undefined;
     $(item.selector).each(function (i, elem) {
       var values = extract(item, $(elem));
 
@@ -29349,7 +30046,15 @@ function parse(source, html, query) {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var val = _step.value;
-          content.add(val);
+
+          if (content) {
+            content.add(val);
+          } else {
+            (0, _forEach.default)(val, function (v, k) {
+              ensureSet(k);
+              data[k].add(v);
+            });
+          }
         }
       } catch (err) {
         _iterator.e(err);
@@ -29357,11 +30062,10 @@ function parse(source, html, query) {
         _iterator.f();
       }
     });
-    data[key] = _toConsumableArray(content);
   };
 
-  var term = function term(item, elem) {
-    var text = strip(elem.text());
+  var term_handler = function term_handler(item, elem) {
+    var text = (0, _utils.strip)(elem.text());
 
     if (!text) {
       return undefined;
@@ -29374,14 +30078,18 @@ function parse(source, html, query) {
     return [text];
   };
 
-  var audio = function audio(item, elem) {
+  var audio_handler = function audio_handler(item, elem) {
     return item.audio.map(function (cmd) {
       if (cmd.startsWith("@")) {
         return elem.attr(cmd.substr(1));
       }
 
-      return strip(elem.text());
+      return (0, _utils.strip)(elem.text());
     });
+  };
+
+  var parse_handler = function parse_handler(item, elem) {
+    return item.parse(elem);
   };
 
   var _iterator2 = _createForOfIteratorHelper(source.plan),
@@ -29392,9 +30100,11 @@ function parse(source, html, query) {
       var item = _step2.value;
 
       if (item.term) {
-        collect(item.term, item, term);
+        collect(item.term, item, term_handler);
       } else if (item.audio) {
-        collect("audio", item, audio);
+        collect("audio", item, audio_handler);
+      } else if (item.parse) {
+        collect(undefined, item, parse_handler);
       }
     }
   } catch (err) {
@@ -29404,8 +30114,13 @@ function parse(source, html, query) {
   }
 
   return {
-    source: source.name,
-    data: data
+    source: {
+      name: source.name,
+      url: source.url
+    },
+    data: (0, _mapValues.default)(data, function (v) {
+      return _toConsumableArray(v);
+    })
   };
 }
 
@@ -29416,7 +30131,12 @@ function makeParser(source) {
       text: text,
       lang: lang || "en"
     };
-    var url = source.url(query);
+    var url = source.makeUrl(query);
+
+    if (IS_BROWSER) {
+      url = "http://www.whateverorigin.org/get?url=".concat(encodeURIComponent(url));
+    }
+
     return (0, _isomorphicUnfetch.default)(url, {
       headers: {
         "User-Agent": "lingua-bot",
@@ -29439,12 +30159,12 @@ function makeParser(source) {
   };
 }
 
-var parsers = [_macmillan.default].map(makeParser);
+var parsers = sources.map(makeParser);
 
 function fetchData(text, lang) {
   return Promise.all(parsers.map(function (fn) {
     return fn(text, lang);
   }));
 }
-},{"isomorphic-unfetch":"VS7n","cheerio":"tWOS","lodash/trim":"GgRv","lodash/isArray":"p0cq","lodash/isNil":"gGJU","./sources/macmillan":"Ccud"}]},{},["Focm"], null)
+},{"isomorphic-unfetch":"VS7n","cheerio":"tWOS","lodash/isArray":"p0cq","lodash/isNil":"gGJU","lodash/forEach":"cTKO","lodash/mapValues":"hwYF","./utils":"FOZT","./sources/macmillan":"Ccud","./sources/forvo":"uyfs","process":"pBGv"}]},{},["Focm"], null)
 //# sourceMappingURL=/bundle.js.map
