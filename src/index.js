@@ -1,37 +1,51 @@
 import fetch from "isomorphic-unfetch";
 import cheerio from "cheerio";
-import trim from "lodash/trim";
 import isArray from "lodash/isArray";
 import isNil from "lodash/isNil";
+import forEach from "lodash/forEach";
+import mapValues from "lodash/mapValues";
+import { strip } from "./utils";
 
 import macmillan from "./sources/macmillan";
+import forvo from "./sources/forvo";
 
-function strip(s) {
-  return trim(s?.trim(), "\u200b");
-}
+const sources = [
+  macmillan,
+  forvo,
+];
 
 function parse(source, html, query) {
   const $ = cheerio.load(html);
   const data = {};
 
-  const collect = (key, item, extract) => {
-    if (!data[key]) {
-      data[key] = [];
+  const ensureSet = (key) => {
+    if (key && !data[key]) {
+      data[key] = new Set();
     }
-    const content = new Set(data[key]);
+  };
+
+  const collect = (key, item, extract) => {
+    ensureSet(key);
+    const content = key ? data[key] : undefined;
     $(item.selector).each((i, elem) => {
       const values = extract(item, $(elem));
       if (!isArray(values)) {
         return;
       }
       for (const val of values.filter((v) => !isNil(v) && v !== "")) {
-        content.add(val);
+        if (content) {
+          content.add(val);
+        } else {
+          forEach(val, (v, k) => {
+            ensureSet(k);
+            data[k].add(v);
+          });
+        }
       }
     });
-    data[key] = [...content];
   };
 
-  const term = (item, elem) => {
+  const term_handler = (item, elem) => {
     const text = strip(elem.text());
     if (!text) {
       return undefined;
@@ -42,7 +56,7 @@ function parse(source, html, query) {
     return [text];
   };
 
-  const audio = (item, elem) => {
+  const audio_handler = (item, elem) => {
     return item.audio.map((cmd) => {
       if (cmd.startsWith("@")) {
         return elem.attr(cmd.substr(1));
@@ -51,17 +65,21 @@ function parse(source, html, query) {
     });
   };
 
+  const parse_handler = (item, elem) => item.parse(elem);
+
   for (const item of source.plan) {
     if (item.term) {
-      collect(item.term, item, term);
+      collect(item.term, item, term_handler);
     } else if (item.audio) {
-      collect("audio", item, audio);
+      collect("audio", item, audio_handler);
+    } else if (item.parse) {
+      collect(undefined, item, parse_handler);
     }
   }
 
   return {
-    source: source.name,
-    data,
+    source: { name: source.name, url: source.url },
+    data: mapValues(data, (v) => [...v]),
   };
 }
 
@@ -69,7 +87,7 @@ function makeParser(source) {
   return (text, lang) => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
-    const url = source.url(query);
+    const url = source.makeUrl(query);
     return fetch(url, {
       headers: {
         "User-Agent": "lingua-bot",
@@ -92,7 +110,7 @@ function makeParser(source) {
   };
 }
 
-const parsers = [macmillan].map(makeParser);
+const parsers = sources.map(makeParser);
 
 export function fetchData(text, lang) {
   return Promise.all(parsers.map((fn) => fn(text, lang)));

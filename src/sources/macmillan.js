@@ -1,6 +1,8 @@
 export default {
   name: "macmillan",
-  url: (q) => `https://www.macmillandictionary.com/dictionary/british/${q.text}`,
+  url: "https://www.macmillandictionary.com",
+  makeUrl: ({ text }) =>
+    `https://www.macmillandictionary.com/dictionary/british/${text}`,
   plan: [
     {
       selector: ".PRON",
