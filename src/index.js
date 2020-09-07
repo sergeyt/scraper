@@ -10,7 +10,7 @@ function strip(s) {
   return trim(s?.trim(), "\u200b");
 }
 
-function parse(source, html) {
+function parse(source, html, query) {
   const $ = cheerio.load(html);
   const data = {};
 
@@ -66,8 +66,10 @@ function parse(source, html) {
 }
 
 function makeParser(source) {
-  return (text) => {
-    const url = source.url({ text });
+  return (text, lang) => {
+    // TODO auto detect lang
+    const query = { text, lang: lang || "en" };
+    const url = source.url(query);
     return fetch(url, {
       headers: {
         "User-Agent": "lingua-bot",
@@ -81,7 +83,7 @@ function makeParser(source) {
         throw new Error(resp.statusText);
       })
       .then((html) => {
-        return parse(source, html);
+        return parse(source, html, query);
       })
       .catch((error) => {
         console.log("error", source.name, error);
@@ -92,6 +94,6 @@ function makeParser(source) {
 
 const parsers = [macmillan].map(makeParser);
 
-export function fetchData(text) {
-  return Promise.all(parsers.map((fn) => fn(text)));
+export function fetchData(text, lang) {
+  return Promise.all(parsers.map((fn) => fn(text, lang)));
 }
