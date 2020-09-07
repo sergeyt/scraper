@@ -1,9 +1,10 @@
 {
-  "name": "scrapper",
-  "version": "1.0",
-  "main": "index.js",
+  "name": "lingua-scraper",
+  "version": "0.1.0",
+  "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "parcel build --no-minify --no-cache -o dist/bundle.js ./src/index.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
@@ -14,6 +15,7 @@
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "core-js": "^3.6.5",
-    "jest": "^26.4.2"
+    "jest": "^26.4.2",
+    "parcel-bundler": "^1.12.4"
   }
 }
