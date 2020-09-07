@@ -1,7 +1,12 @@
 import fetch from "isomorphic-unfetch";
 import cheerio from "cheerio";
+import trim from "lodash/trim";
 
 import macmillan from "./sources/macmillan";
+
+function strip(s) {
+  return trim(s?.trim(), '\u200b');
+}
 
 function parse(source, html) {
   const $ = cheerio.load(html);
@@ -13,7 +18,7 @@ function parse(source, html) {
       }
       const content = new Set(data[item.term]);
       $(item.selector).each((i, elem) => {
-        const text = $(elem).text().trim();
+        const text = strip($(elem).text());
         if (!text) {
           return;
         }
