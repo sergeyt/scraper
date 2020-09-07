@@ -1,37 +1,64 @@
 import fetch from "isomorphic-unfetch";
 import cheerio from "cheerio";
 import trim from "lodash/trim";
+import isArray from "lodash/isArray";
+import isNil from "lodash/isNil";
 
 import macmillan from "./sources/macmillan";
 
 function strip(s) {
-  return trim(s?.trim(), '\u200b');
+  return trim(s?.trim(), "\u200b");
 }
 
 function parse(source, html) {
   const $ = cheerio.load(html);
   const data = {};
+
+  const collect = (key, item, extract) => {
+    if (!data[key]) {
+      data[key] = [];
+    }
+    const content = new Set(data[key]);
+    $(item.selector).each((i, elem) => {
+      const values = extract(item, $(elem));
+      if (!isArray(values)) {
+        return;
+      }
+      for (const val of values.filter((v) => !isNil(v) && v !== "")) {
+        content.add(val);
+      }
+    });
+    data[key] = [...content];
+  };
+
+  const term = (item, elem) => {
+    const text = strip(elem.text());
+    if (!text) {
+      return undefined;
+    }
+    if (item.exclude && item.exclude.includes(text)) {
+      return undefined;
+    }
+    return [text];
+  };
+
+  const audio = (item, elem) => {
+    return item.audio.map((cmd) => {
+      if (cmd.startsWith("@")) {
+        return elem.attr(cmd.substr(1));
+      }
+      return strip(elem.text());
+    });
+  };
+
   for (const item of source.plan) {
     if (item.term) {
-      if (!data[item.term]) {
-        data[item.term] = [];
-      }
-      const content = new Set(data[item.term]);
-      $(item.selector).each((i, elem) => {
-        const text = strip($(elem).text());
-        if (!text) {
-          return;
-        }
-        if (item.exclude && item.exclude.includes(text)) {
-          return;
-        }
-        content.add(text);
-      });
-      data[item.term] = [...content];
+      collect(item.term, item, term);
     } else if (item.audio) {
-      // TODO implement
+      collect("audio", item, audio);
     }
   }
+
   return {
     source: source.name,
     data,
@@ -43,7 +70,7 @@ function makeParser(source) {
     const url = source.url({ text });
     return fetch(url, {
       headers: {
-        "User-Agent": "bot",
+        "User-Agent": "lingua-bot",
         Accept: "text/html,application/xhtml+xml",
       },
     })
