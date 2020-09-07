@@ -100,7 +100,7 @@ function makeParser(source) {
     let url = source.makeUrl(query);
 
     if (IS_BROWSER) {
-      url = `http://www.whateverorigin.org/get?url=${encodeURIComponent(url)}`;
+      url = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
     }
 
     return fetch(url, {
