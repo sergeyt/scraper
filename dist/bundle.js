@@ -30134,7 +30134,7 @@ function makeParser(source) {
     var url = source.makeUrl(query);
 
     if (IS_BROWSER) {
-      url = "http://www.whateverorigin.org/get?url=".concat(encodeURIComponent(url));
+      url = "https://api.allorigins.win/raw?url=".concat(encodeURIComponent(url));
     }
 
     return (0, _isomorphicUnfetch.default)(url, {
