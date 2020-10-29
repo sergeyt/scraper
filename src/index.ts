@@ -1,6 +1,5 @@
 import fetch from "isomorphic-unfetch";
 import cheerio from "cheerio";
-import isArray from "lodash/isArray";
 import isNil from "lodash/isNil";
 import forEach from "lodash/forEach";
 import mapValues from "lodash/mapValues";
@@ -39,7 +38,7 @@ function parse(source, html, query) {
     const content = key ? data[key] : undefined;
     $(item.selector).each((i, elem) => {
       const values = extract(item, $(elem));
-      if (!isArray(values)) {
+      if (!Array.isArray(values)) {
         return;
       }
       for (const val of values.filter((v) => !isNil(v) && v !== "")) {
@@ -89,7 +88,7 @@ function parse(source, html, query) {
 
   return {
     source: { name: source.name, url: source.url },
-    data: mapValues(data, (v) => [...v]),
+    data: mapValues(data, (v) => Array.from(v)),
   };
 }
 
@@ -127,6 +126,6 @@ function makeParser(source) {
 
 const parsers = sources.map(makeParser);
 
-export function fetchData(text, lang) {
+export function fetchData(text: string, lang?: string) {
   return Promise.all(parsers.map((fn) => fn(text, lang)));
 }

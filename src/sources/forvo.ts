@@ -54,7 +54,7 @@ function parse_from(s) {
   if (isEmpty(a)) {
     return undefined;
   }
-  const result = { gender: translate_gender(a[0]) };
+  const result: any = { gender: translate_gender(a[0]) };
   if (a.length === 2) {
     result.country = translate_counry(a[1]);
   }
@@ -84,7 +84,7 @@ export default {
           return undefined;
         }
 
-        const result = { url };
+        const result: any = { url };
 
         const author = elem.find("span.ofLink");
         if (author && author.attr("data-p2")) {

@@ -29288,29 +29288,34 @@ function trim(string, chars, guard) {
 
 module.exports = trim;
 
-},{"./_baseToString":"w4yJ","./_castSlice":"Kr2C","./_charsEndIndex":"a8Tx","./_charsStartIndex":"of1r","./_stringToArray":"smkV","./toString":"A8RV"}],"FOZT":[function(require,module,exports) {
+},{"./_baseToString":"w4yJ","./_castSlice":"Kr2C","./_charsEndIndex":"a8Tx","./_charsStartIndex":"of1r","./_stringToArray":"smkV","./toString":"A8RV"}],"UnXq":[function(require,module,exports) {
 "use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.strip = strip;
+exports.strip = void 0;
 
-var _trim = _interopRequireDefault(require("lodash/trim"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var trim_1 = __importDefault(require("lodash/trim"));
 
 function strip(s) {
-  return (0, _trim.default)(s === null || s === void 0 ? void 0 : s.trim(), "\u200B");
+  return trim_1.default(s === null || s === void 0 ? void 0 : s.trim(), "\u200B");
 }
-},{"lodash/trim":"GgRv"}],"Ccud":[function(require,module,exports) {
+
+exports.strip = strip;
+},{"lodash/trim":"GgRv"}],"GiUv":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-var _default = {
+exports.default = {
   name: "macmillan",
   url: "https://www.macmillandictionary.com",
   makeUrl: function makeUrl(_ref) {
@@ -29344,7 +29349,6 @@ var _default = {
     audio: ["@data-src-mp3", "@data-src-ogg"]
   }]
 };
-exports.default = _default;
 },{}],"BBRi":[function(require,module,exports) {
 var baseKeys = require('./_baseKeys'),
     getTag = require('./_getTag'),
@@ -29814,25 +29818,28 @@ const gBase64 = {
 }; // makecjs:CUT //
 
 exports.Base64 = gBase64;
-},{"buffer":"dskh"}],"uyfs":[function(require,module,exports) {
+},{"buffer":"dskh"}],"uORe":[function(require,module,exports) {
 "use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _isEmpty = _interopRequireDefault(require("lodash/isEmpty"));
+var isEmpty_1 = __importDefault(require("lodash/isEmpty"));
 
-var _trimStart = _interopRequireDefault(require("lodash/trimStart"));
+var trimStart_1 = __importDefault(require("lodash/trimStart"));
 
-var _trimEnd = _interopRequireDefault(require("lodash/trimEnd"));
+var trimEnd_1 = __importDefault(require("lodash/trimEnd"));
 
-var _jsBase = require("js-base64");
+var js_base64_1 = require("js-base64");
 
-var _utils = require("../utils");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var utils_1 = require("../utils");
 
 var AUDIO_HOST = "https://audio00.forvo.com/audios/mp3";
 var encode = encodeURIComponent;
@@ -29862,7 +29869,7 @@ function parse_fn(src) {
 }
 
 function translate_gender(val) {
-  val = (0, _utils.strip)(val);
+  val = utils_1.strip(val);
 
   if (val === "\u0436\u0435\u043D\u0449\u0438\u043D\u0430") {
     return "f";
@@ -29876,7 +29883,7 @@ function translate_gender(val) {
 }
 
 function translate_counry(val) {
-  val = (0, _utils.strip)(val); // r = dictcom.translate(val)
+  val = utils_1.strip(val); // r = dictcom.translate(val)
   // if r is not None and len(r['tran']) > 0:
   //     return r['tran'][0].lower()
 
@@ -29888,10 +29895,10 @@ function parse_from(s) {
     return undefined;
   }
 
-  s = (0, _trimEnd.default)((0, _trimStart.default)(s, "("), ")");
+  s = trimEnd_1.default(trimStart_1.default(s, "("), ")");
   var a = s.split(",");
 
-  if ((0, _isEmpty.default)(a)) {
+  if (isEmpty_1.default(a)) {
     return undefined;
   }
 
@@ -29906,7 +29913,7 @@ function parse_from(s) {
   return result;
 }
 
-var _default = {
+exports.default = {
   name: "forvo",
   url: "https://forvo.com",
   makeUrl: function makeUrl(_ref) {
@@ -29929,8 +29936,7 @@ var _default = {
         return undefined;
       }
 
-      var rel = _jsBase.Base64.decode(fn["args"][4]);
-
+      var rel = js_base64_1.Base64.decode(fn["args"][4]);
       var url = "".concat(AUDIO_HOST, "/").concat(rel);
 
       if (!url.endsWith(".mp3")) {
@@ -29962,35 +29968,9 @@ var _default = {
     }
   }]
 };
-exports.default = _default;
-},{"lodash/isEmpty":"BBRi","lodash/trimStart":"FBd6","lodash/trimEnd":"jdTH","js-base64":"gEwE","../utils":"FOZT"}],"Focm":[function(require,module,exports) {
+},{"lodash/isEmpty":"BBRi","lodash/trimStart":"FBd6","lodash/trimEnd":"jdTH","js-base64":"gEwE","../utils":"UnXq"}],"QCba":[function(require,module,exports) {
 var process = require("process");
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.fetchData = fetchData;
-
-var _isomorphicUnfetch = _interopRequireDefault(require("isomorphic-unfetch"));
-
-var _cheerio = _interopRequireDefault(require("cheerio"));
-
-var _isArray = _interopRequireDefault(require("lodash/isArray"));
-
-var _isNil = _interopRequireDefault(require("lodash/isNil"));
-
-var _forEach = _interopRequireDefault(require("lodash/forEach"));
-
-var _mapValues = _interopRequireDefault(require("lodash/mapValues"));
-
-var _utils = require("./utils");
-
-var _macmillan = _interopRequireDefault(require("./sources/macmillan"));
-
-var _forvo = _interopRequireDefault(require("./sources/forvo"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -30006,6 +29986,35 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fetchData = void 0;
+
+var isomorphic_unfetch_1 = __importDefault(require("isomorphic-unfetch"));
+
+var cheerio_1 = __importDefault(require("cheerio"));
+
+var isArray_1 = __importDefault(require("lodash/isArray"));
+
+var isNil_1 = __importDefault(require("lodash/isNil"));
+
+var forEach_1 = __importDefault(require("lodash/forEach"));
+
+var mapValues_1 = __importDefault(require("lodash/mapValues"));
+
+var utils_1 = require("./utils");
+
+var macmillan_1 = __importDefault(require("./sources/macmillan"));
+
+var forvo_1 = __importDefault(require("./sources/forvo"));
+
 function isNode() {
   return Object.prototype.toString.call(typeof process !== "undefined" ? process : 0) === "[object process]";
 }
@@ -30015,11 +30024,10 @@ function isBrowser() {
 }
 
 var IS_BROWSER = isBrowser();
-var sources = [_macmillan.default, _forvo.default];
+var sources = [macmillan_1.default, forvo_1.default];
 
 function parse(source, html, query) {
-  var $ = _cheerio.default.load(html);
-
+  var $ = cheerio_1.default.load(html);
   var data = {};
 
   var ensureSet = function ensureSet(key) {
@@ -30034,12 +30042,12 @@ function parse(source, html, query) {
     $(item.selector).each(function (i, elem) {
       var values = extract(item, $(elem));
 
-      if (!(0, _isArray.default)(values)) {
+      if (!isArray_1.default(values)) {
         return;
       }
 
       var _iterator = _createForOfIteratorHelper(values.filter(function (v) {
-        return !(0, _isNil.default)(v) && v !== "";
+        return !isNil_1.default(v) && v !== "";
       })),
           _step;
 
@@ -30050,7 +30058,7 @@ function parse(source, html, query) {
           if (content) {
             content.add(val);
           } else {
-            (0, _forEach.default)(val, function (v, k) {
+            forEach_1.default(val, function (v, k) {
               ensureSet(k);
               data[k].add(v);
             });
@@ -30065,7 +30073,7 @@ function parse(source, html, query) {
   };
 
   var term_handler = function term_handler(item, elem) {
-    var text = (0, _utils.strip)(elem.text());
+    var text = utils_1.strip(elem.text());
 
     if (!text) {
       return undefined;
@@ -30084,7 +30092,7 @@ function parse(source, html, query) {
         return elem.attr(cmd.substr(1));
       }
 
-      return (0, _utils.strip)(elem.text());
+      return utils_1.strip(elem.text());
     });
   };
 
@@ -30118,7 +30126,7 @@ function parse(source, html, query) {
       name: source.name,
       url: source.url
     },
-    data: (0, _mapValues.default)(data, function (v) {
+    data: mapValues_1.default(data, function (v) {
       return _toConsumableArray(v);
     })
   };
@@ -30137,7 +30145,7 @@ function makeParser(source) {
       url = "https://api.allorigins.win/raw?url=".concat(encodeURIComponent(url));
     }
 
-    return (0, _isomorphicUnfetch.default)(url, {
+    return isomorphic_unfetch_1.default(url, {
       headers: {
         "User-Agent": "lingua-bot",
         Accept: "text/html,application/xhtml+xml"
@@ -30166,5 +30174,7 @@ function fetchData(text, lang) {
     return fn(text, lang);
   }));
 }
-},{"isomorphic-unfetch":"VS7n","cheerio":"tWOS","lodash/isArray":"p0cq","lodash/isNil":"gGJU","lodash/forEach":"cTKO","lodash/mapValues":"hwYF","./utils":"FOZT","./sources/macmillan":"Ccud","./sources/forvo":"uyfs","process":"pBGv"}]},{},["Focm"], null)
+
+exports.fetchData = fetchData;
+},{"isomorphic-unfetch":"VS7n","cheerio":"tWOS","lodash/isArray":"p0cq","lodash/isNil":"gGJU","lodash/forEach":"cTKO","lodash/mapValues":"hwYF","./utils":"UnXq","./sources/macmillan":"GiUv","./sources/forvo":"uORe","process":"pBGv"}]},{},["QCba"], null)
 //# sourceMappingURL=/bundle.js.map
