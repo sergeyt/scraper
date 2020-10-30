@@ -10,7 +10,8 @@
     "cheerio": "^1.0.0-rc.3",
     "isomorphic-unfetch": "^3.1.0",
     "js-base64": "^3.5.2",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "playwright": "^1.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

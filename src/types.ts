@@ -7,4 +7,6 @@ export interface IElement {
 export interface IEngine {
   // Finds all elements matching specified selector
   $$(selector: string): Promise<IElement[]>;
+  close(): Promise<void>;
 }
+

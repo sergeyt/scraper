@@ -6,8 +6,9 @@ import { strip } from "./utils";
 import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
-import { makeCheerioEngine } from "./cheerio";
 import { IEngine } from "./types";
+import { makeCheerioEngine } from "./cheerio";
+import { makePlaywrightEngine } from './playwright';
 
 const sources = [wordnik, macmillan, forvo];
 
@@ -102,7 +103,7 @@ function makeParser(source) {
     const url = source.makeUrl(query);
 
     try {
-      const engine = await makeCheerioEngine(url);
+      const engine = await makePlaywrightEngine(url);
       const results = parse(source, engine, query);
       return results;
     } catch (error) {
