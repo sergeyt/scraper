@@ -5,6 +5,7 @@ import forEach from "lodash/forEach";
 import mapValues from "lodash/mapValues";
 import { strip } from "./utils";
 
+import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 
@@ -21,7 +22,7 @@ function isBrowser() {
 }
 
 const IS_BROWSER = isBrowser();
-const sources = [macmillan, forvo];
+const sources = [wordnik, macmillan, forvo];
 
 function parse(source, html, query) {
   const $ = cheerio.load(html);
@@ -74,6 +75,15 @@ function parse(source, html, query) {
     });
   };
 
+  const visual_handler = (item, elem) => {
+    return item.visual.map((cmd) => {
+      if (cmd.startsWith("@")) {
+        return elem.attr(cmd.substr(1));
+      }
+      return strip(elem.text());
+    });
+  };
+
   const parse_handler = (item, elem) => item.parse(elem);
 
   for (const item of source.plan) {
@@ -81,6 +91,8 @@ function parse(source, html, query) {
       collect(item.term, item, term_handler);
     } else if (item.audio) {
       collect("audio", item, audio_handler);
+    } else if (item.visual) {
+      collect("visual", item, visual_handler);
     } else if (item.parse) {
       collect(undefined, item, parse_handler);
     }
