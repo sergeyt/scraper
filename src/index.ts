@@ -1,5 +1,3 @@
-import fetch from "isomorphic-unfetch";
-import cheerio from "cheerio";
 import isNil from "lodash/isNil";
 import forEach from "lodash/forEach";
 import mapValues from "lodash/mapValues";
@@ -8,24 +6,12 @@ import { strip } from "./utils";
 import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
+import { makeCheerioEngine } from "./cheerio";
+import { IEngine } from "./types";
 
-function isNode() {
-  return (
-    Object.prototype.toString.call(
-      typeof process !== "undefined" ? process : 0
-    ) === "[object process]"
-  );
-}
-
-function isBrowser() {
-  return !isNode() && typeof window !== "undefined";
-}
-
-const IS_BROWSER = isBrowser();
 const sources = [wordnik, macmillan, forvo];
 
-function parse(source, html, query) {
-  const $ = cheerio.load(html);
+async function parse(source, root: IEngine, query) {
   const data = {};
 
   const ensureSet = (key) => {
@@ -34,11 +20,12 @@ function parse(source, html, query) {
     }
   };
 
-  const collect = (key, item, extract) => {
+  const collect = async (key, item, extract) => {
     ensureSet(key);
     const content = key ? data[key] : undefined;
-    $(item.selector).each((i, elem) => {
-      const values = extract(item, $(elem));
+    const elements = await root.$$(item.selector);
+    for (const element of elements) {
+      const values = await extract(item, element);
       if (!Array.isArray(values)) {
         return;
       }
@@ -52,11 +39,11 @@ function parse(source, html, query) {
           });
         }
       }
-    });
+    }
   };
 
-  const term_handler = (item, elem) => {
-    const text = strip(elem.text());
+  const term_handler = async (item, elem) => {
+    const text = strip(await elem.textContent());
     if (!text) {
       return undefined;
     }
@@ -66,35 +53,39 @@ function parse(source, html, query) {
     return [text];
   };
 
-  const audio_handler = (item, elem) => {
-    return item.audio.map((cmd) => {
+  const get_values = async (elem, commands) => {
+    const results = [];
+    for (const cmd of commands) {
       if (cmd.startsWith("@")) {
-        return elem.attr(cmd.substr(1));
+        const val = await elem.getAttribute(cmd.substr(1));
+        results.push(val);
+      } else {
+        const val = strip(await elem.text());
+        results.push(val);
       }
-      return strip(elem.text());
-    });
+    }
+    return results;
   };
 
-  const visual_handler = (item, elem) => {
-    return item.visual.map((cmd) => {
-      if (cmd.startsWith("@")) {
-        return elem.attr(cmd.substr(1));
-      }
-      return strip(elem.text());
-    });
+  const audio_handler = async (item, elem) => {
+    return await get_values(elem, item.audio);
+  };
+
+  const visual_handler = async (item, elem) => {
+    return await get_values(elem, item.visual);
   };
 
   const parse_handler = (item, elem) => item.parse(elem);
 
   for (const item of source.plan) {
     if (item.term) {
-      collect(item.term, item, term_handler);
+      await collect(item.term, item, term_handler);
     } else if (item.audio) {
-      collect("audio", item, audio_handler);
+      await collect("audio", item, audio_handler);
     } else if (item.visual) {
-      collect("visual", item, visual_handler);
+      await collect("visual", item, visual_handler);
     } else if (item.parse) {
-      collect(undefined, item, parse_handler);
+      await collect(undefined, item, parse_handler);
     }
   }
 
@@ -105,34 +96,19 @@ function parse(source, html, query) {
 }
 
 function makeParser(source) {
-  return (text, lang) => {
+  return async (text, lang) => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
-    let url = source.makeUrl(query);
+    const url = source.makeUrl(query);
 
-    if (IS_BROWSER) {
-      url = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+    try {
+      const engine = await makeCheerioEngine(url);
+      const results = parse(source, engine, query);
+      return results;
+    } catch (error) {
+      console.log("error", source.name, error);
+      return { error };
     }
-
-    return fetch(url, {
-      headers: {
-        "User-Agent": "lingua-bot",
-        Accept: "text/html,application/xhtml+xml",
-      },
-    })
-      .then((resp) => {
-        if (resp.ok) {
-          return resp.text();
-        }
-        throw new Error(resp.statusText);
-      })
-      .then((html) => {
-        return parse(source, html, query);
-      })
-      .catch((error) => {
-        console.log("error", source.name, error);
-        return { error };
-      });
   };
 }
 

@@ -3,6 +3,7 @@ import trimStart from "lodash/trimStart";
 import trimEnd from "lodash/trimEnd";
 import { Base64 } from "js-base64";
 import { strip } from "../utils";
+import { IElement } from '../types';
 
 const AUDIO_HOST = "https://audio00.forvo.com/audios/mp3";
 const encode = encodeURIComponent;
@@ -69,12 +70,12 @@ export default {
   plan: [
     {
       selector: "article.pronunciations ul.show-all-pronunciations li",
-      parse: (elem) => {
-        const btn = elem.find("span.play");
+      parse: async (elem: IElement) => {
+        const btn = (await elem.$$("span.play"))[0];
         if (!btn) {
           return undefined;
         }
-        const fn = parse_fn(btn.attr("onclick"));
+        const fn = parse_fn(await btn.getAttribute("onclick"));
         if (!fn || fn.name !== "Play") {
           return undefined;
         }
@@ -86,14 +87,17 @@ export default {
 
         const result: any = { url };
 
-        const author = elem.find("span.ofLink");
-        if (author && author.attr("data-p2")) {
-          result.author = author.attr("data-p2");
+        const author = (await elem.$$("span.ofLink"))[0];
+        if (author) {
+          const val = await author.getAttribute("data-p2");
+          if (val) {
+            result.author = val;
+          }
         }
 
-        const from = elem.find("span.from");
+        const from = (await elem.$$("span.from"))[0];
         if (from) {
-          const d = parse_from(from.text());
+          const d = parse_from(await from.textContent());
           if (d) {
             Object.assign(result, d);
           }
