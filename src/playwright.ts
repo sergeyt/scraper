@@ -1,5 +1,7 @@
 import { chromium, Browser, Page, ElementHandle } from 'playwright';
 import { IEngine, IElement } from './types';
+import { IS_BROWSER } from './utils';
+import { makeCheerioEngine } from './cheerio';
 
 class ElementImpl implements IElement {
     page: Page;
@@ -51,6 +53,10 @@ class EngineImpl implements IEngine {
 }
 
 export async function makePlaywrightEngine(url: string) {
+    if (IS_BROWSER) {
+        // TODO or return empty engine
+        return await makeCheerioEngine(url);
+    }
     // TODO support other browser
     const browser = await chromium.launch();
     const page = await browser.newPage();

@@ -6,13 +6,12 @@ import { strip } from "./utils";
 import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
-import { IEngine } from "./types";
-import { makeCheerioEngine } from "./cheerio";
-import { makePlaywrightEngine } from './playwright';
+import { IEngine, Source } from './types';
+import { makeEngine } from './factory';
 
 const sources = [wordnik, macmillan, forvo];
 
-async function parse(source, root: IEngine, query) {
+async function parse(source: Source, root: IEngine, query) {
   const data = {};
 
   const ensureSet = (key) => {
@@ -96,19 +95,19 @@ async function parse(source, root: IEngine, query) {
   };
 }
 
-function makeParser(source) {
+function makeParser(source: Source) {
   return async (text, lang) => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
     const url = source.makeUrl(query);
 
     try {
-      const engine = await makePlaywrightEngine(url);
+      const engine = await makeEngine(source.engine, url);
       const results = parse(source, engine, query);
       return results;
     } catch (error) {
       console.log("error", source.name, error);
-      return { error };
+      return { source: { name: source.name, url: source.url }, error };
     }
   };
 }

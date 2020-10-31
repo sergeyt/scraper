@@ -1,4 +1,7 @@
-export default {
+import { Source } from '../types';
+
+const wordnik: Source = {
+  engine: "playwright",
   name: "wordnik",
   url: "https://www.wordnik.com",
   makeUrl: ({ text }) => `https://www.wordnik.com/words/${text}`,
@@ -9,3 +12,5 @@ export default {
     },
   ],
 };
+
+export default wordnik;

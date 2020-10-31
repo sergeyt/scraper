@@ -1,4 +1,6 @@
-export default {
+import { Source } from '../types';
+
+const macmillan: Source = {
   name: "macmillan",
   url: "https://www.macmillandictionary.com",
   makeUrl: ({ text }) =>
@@ -39,3 +41,5 @@ export default {
     },
   ],
 };
+
+export default macmillan;
