@@ -6,10 +6,11 @@ import { strip } from "./utils";
 import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
-import { IEngine, Source } from './types';
-import { makeEngine } from './factory';
+import howjsay from "./sources/howjsay";
+import { IEngine, Source } from "./types";
+import { makeEngine } from "./factory";
 
-const sources = [wordnik, macmillan, forvo];
+const sources = [wordnik, macmillan, forvo, howjsay];
 
 async function parse(source: Source, root: IEngine, query) {
   const data = {};
@@ -99,6 +100,16 @@ function makeParser(source: Source) {
   return async (text, lang) => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
+    if (source.getData) {
+      try {
+        const data = await source.getData(query);
+        return { source: { name: source.name, url: source.url }, data };
+      } catch (error) {
+        console.log("error", source.name, error);
+        return { source: { name: source.name, url: source.url }, error };
+      }
+    }
+
     const url = source.makeUrl(query);
 
     try {

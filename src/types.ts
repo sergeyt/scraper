@@ -9,12 +9,15 @@ export type ExecutionPlan = {
 
 export type EngineType = "playwright" | "cheerio";
 
+export type Query = { text: string; lang: string };
+
 export type Source = {
   name: string;
   url: string;
-  makeUrl(query: {text: string; lang: string}): string;
+  makeUrl?(query: Query): string;
   engine?: EngineType;
-  plan: ExecutionPlan[];
+  plan?: ExecutionPlan[];
+  getData(query: Query): Promise<any>;
 };
 
 export interface IElement {
