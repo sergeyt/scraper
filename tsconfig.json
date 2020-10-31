@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "lib",
-    "target": "ES5",
+    "target": "esnext",
+    "module": "esnext",
     "sourceMap": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
