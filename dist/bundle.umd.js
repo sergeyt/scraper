@@ -3010,7 +3010,7 @@
     Eu = {
       type: "audio",
       name: "howjsay",
-      url: "https://howjsay.com/mp3",
+      url: "https://howjsay.com",
       getData: function (t) {
         var e = t.text;
         try {

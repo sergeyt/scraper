@@ -2012,7 +2012,7 @@ const Fo = {
   Wo = {
     type: "audio",
     name: "howjsay",
-    url: "https://howjsay.com/mp3",
+    url: "https://howjsay.com",
     getData: async ({ text: t }) => ({
       audio: [{ url: `https://howjsay.com/mp3/${encodeURIComponent(t)}.mp3` }],
     }),
