@@ -3,6 +3,9 @@
   "version": "0.5.0",
   "main": "dist/bundle.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "microbundle",
     "ci": "yarn test && yarn build",
