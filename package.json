@@ -1,6 +1,6 @@
 {
   "name": "lingua-scraper",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": "dist/bundle.js",
   "types": "dist/index.d.ts",
   "scripts": {
