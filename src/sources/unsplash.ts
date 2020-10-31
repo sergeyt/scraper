@@ -1,6 +1,7 @@
 import { Source } from "../types";
 
 const unsplash: Source = {
+  type: "visual",
   name: "unsplash",
   url: "https://unsplash.com",
   makeUrl({ text }): string {

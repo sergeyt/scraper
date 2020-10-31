@@ -9,9 +9,12 @@ export type ExecutionPlan = {
 
 export type EngineType = "playwright" | "cheerio";
 
-export type Query = { text: string; lang: string };
+export type Query = { text: string; lang?: string };
+
+export type SourceType = "universal" | "audio" | "visual";
 
 export type Source = {
+  type: SourceType;
   name: string;
   url: string;
   makeUrl?(query: Query): string;

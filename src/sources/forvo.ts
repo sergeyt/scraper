@@ -3,7 +3,7 @@ import trimStart from "lodash/trimStart";
 import trimEnd from "lodash/trimEnd";
 import { Base64 } from "js-base64";
 import { strip } from "../utils";
-import { IElement, Source } from '../types';
+import { IElement, Source } from "../types";
 
 const AUDIO_HOST = "https://audio00.forvo.com/audios/mp3";
 const encode = encodeURIComponent;
@@ -63,6 +63,7 @@ function parse_from(s) {
 }
 
 const forvo: Source = {
+  type: "audio",
   name: "forvo",
   url: "https://forvo.com",
   makeUrl: ({ text, lang }) =>

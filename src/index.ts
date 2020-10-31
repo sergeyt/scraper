@@ -8,10 +8,10 @@ import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 import howjsay from "./sources/howjsay";
-import { IEngine, Source } from "./types";
+import { IEngine, Source, Query, SourceType } from "./types";
 import { makeEngine } from "./factory";
 
-const sources = [unsplash, wordnik, macmillan, forvo, howjsay];
+export const sources = [unsplash, wordnik, macmillan, forvo, howjsay];
 
 async function parse(source: Source, root: IEngine, query) {
   const data = {};
@@ -113,7 +113,7 @@ async function parse(source: Source, root: IEngine, query) {
 }
 
 function makeParser(source: Source) {
-  return async (text, lang) => {
+  return async ({ text, lang }: Query) => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
     if (source.getData) {
@@ -142,8 +142,19 @@ function makeParser(source: Source) {
   };
 }
 
-const parsers = sources.map(makeParser);
+type Options = {
+  type?: SourceType;
+  sources?: Source[];
+};
 
-export function fetchData(text: string, lang?: string) {
-  return Promise.all(parsers.map((fn) => fn(text, lang)));
+export function fetchData(query: Query, options: Options = {}) {
+  const src =
+    options.sources ||
+    sources.filter((s) => {
+      if (options.type) {
+        return s.type === options.type;
+      }
+      return true;
+    });
+  return Promise.all(src.map(makeParser).map((fn) => fn(query)));
 }

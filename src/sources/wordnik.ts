@@ -1,6 +1,7 @@
 import { Source } from "../types";
 
 const wordnik: Source = {
+  type: "universal",
   engine: "playwright",
   name: "wordnik",
   url: "https://www.wordnik.com",

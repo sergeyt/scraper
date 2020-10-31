@@ -1,6 +1,7 @@
 import { Source, Query } from "../types";
 
 const howjsay: Source = {
+  type: "audio",
   name: "howjsay",
   url: "https://howjsay.com/mp3",
   async getData({ text }: Query): Promise<any> {
