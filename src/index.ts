@@ -7,6 +7,8 @@ import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 import howjsay from "./sources/howjsay";
 import webster from "./sources/webster";
+import cambridge from "./sources/cambridge";
+
 import { IEngine, Source, Query, SourceType } from "./types";
 import { makeEngine } from "./factory";
 
@@ -15,6 +17,7 @@ export const sources: Source[] = [
   wordnik,
   macmillan,
   webster,
+  cambridge,
   forvo,
   howjsay,
 ];
@@ -72,6 +75,12 @@ async function parse(source: Source, root: IEngine, query) {
     }
     if (item.lstrip && val.startsWith(item.lstrip)) {
       val = strip(val.substr(item.lstrip.length));
+    }
+    if (!val) {
+      return undefined;
+    }
+    if (item.map) {
+      val = item.map(val);
     }
     if (!val) {
       return undefined;

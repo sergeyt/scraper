@@ -8,6 +8,7 @@ export type ExecutionPlan = {
   visual?: string[] | Extractor;
   parse?: (elem: IElement) => Promise<any[]>;
   lstrip?: string;
+  map?: (s: string) => string;
 };
 
 export type EngineType = "playwright" | "cheerio";
