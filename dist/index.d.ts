@@ -4,6 +4,7 @@ declare type Options = {
     type?: SourceType;
     sources?: Source[];
     include?: string[];
+    exclude?: string[];
 };
 export declare function fetchData(query: Query, options?: Options): Promise<({
     source: {
