@@ -4,7 +4,7 @@
   "main": "dist/bundle.js",
   "scripts": {
     "test": "jest",
-    "build": "parcel build --no-minify --no-cache -o dist/bundle.js ./src/index.ts"
+    "build": "microbundle"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
@@ -22,7 +22,7 @@
     "core-js": "^3.6.5",
     "husky": "^4.3.0",
     "jest": "^26.6.1",
-    "parcel-bundler": "^1.12.4",
+    "microbundle": "^0.12.4",
     "prettier": "^2.1.2",
     "pretty-quick": "^3.1.0",
     "ts-jest": "^26.4.3",
