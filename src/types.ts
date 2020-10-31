@@ -1,17 +1,20 @@
+type Extractor = (e: IElement) => Promise<string>;
+
 export type ExecutionPlan = {
   selector: string;
   term?: string;
   exclude?: string[];
-  audio?: string[];
-  visual?: string[];
+  audio?: string[] | Extractor;
+  visual?: string[] | Extractor;
   parse?: (elem: IElement) => Promise<any[]>;
+  lstrip?: string;
 };
 
 export type EngineType = "playwright" | "cheerio";
 
 export type Query = { text: string; lang?: string };
 
-export type SourceType = "universal" | "audio" | "visual";
+export type SourceType = "universal" | "audio" | "visual" | "text";
 
 export type Source = {
   type: SourceType;

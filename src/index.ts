@@ -6,10 +6,18 @@ import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 import howjsay from "./sources/howjsay";
+import webster from "./sources/webster";
 import { IEngine, Source, Query, SourceType } from "./types";
 import { makeEngine } from "./factory";
 
-export const sources: Source[] = [unsplash, wordnik, macmillan, forvo, howjsay];
+export const sources: Source[] = [
+  webster,
+  unsplash,
+  wordnik,
+  macmillan,
+  forvo,
+  howjsay,
+];
 
 async function parse(source: Source, root: IEngine, query) {
   const data = {};
@@ -55,11 +63,17 @@ async function parse(source: Source, root: IEngine, query) {
   };
 
   const term_handler = async (item, elem) => {
-    const val = strip(await elem.textContent());
+    let val = strip(await elem.textContent());
     if (!val) {
       return undefined;
     }
     if (is_excluded(item, val)) {
+      return undefined;
+    }
+    if (item.lstrip && val.startsWith(item.lstrip)) {
+      val = strip(val.substr(item.lstrip.length));
+    }
+    if (!val) {
       return undefined;
     }
     return [val];
@@ -67,18 +81,30 @@ async function parse(source: Source, root: IEngine, query) {
 
   const get_values = async (item, elem, commands) => {
     const results = [];
-    for (const cmd of commands) {
-      let val: string;
-      if (cmd.startsWith("@")) {
-        val = await elem.getAttribute(cmd.substr(1));
-      } else {
-        val = strip(await elem.text());
+    if (_.isArray(commands)) {
+      for (const cmd of commands) {
+        let val: string;
+        if (_.isString(cmd)) {
+          if (cmd.startsWith("@")) {
+            val = await elem.getAttribute(cmd.substr(1));
+          } else {
+            val = strip(await elem.text());
+          }
+        } else {
+          val = await cmd(elem);
+        }
+        if (is_excluded(item, val)) {
+          continue;
+        }
+        results.push(val);
       }
-      if (is_excluded(item, val)) {
-        continue;
+    } else {
+      const val = await commands(elem);
+      if (!is_excluded(item, val)) {
+        results.push(val);
       }
-      results.push(val);
     }
+
     return results.length === 0 ? undefined : results;
   };
 
