@@ -7,6 +7,10 @@ const macmillan: Source = {
   makeUrl: ({ text }) => `/dictionary/british/${text}`,
   plan: [
     {
+      selector: ".audio_play_button",
+      audio: ["@data-src-mp3", "@data-src-ogg"],
+    },
+    {
       selector: ".PRON",
       term: "transcription",
     },
@@ -34,10 +38,6 @@ const macmillan: Source = {
       selector: ".synonyms .theslink",
       exclude: ["..."],
       term: "synonym",
-    },
-    {
-      selector: ".audio_play_button",
-      audio: ["@data-src-mp3", "@data-src-ogg"],
     },
   ],
 };

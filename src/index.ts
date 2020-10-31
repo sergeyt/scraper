@@ -11,10 +11,10 @@ import { IEngine, Source, Query, SourceType } from "./types";
 import { makeEngine } from "./factory";
 
 export const sources: Source[] = [
-  webster,
   unsplash,
   wordnik,
   macmillan,
+  webster,
   forvo,
   howjsay,
 ];
