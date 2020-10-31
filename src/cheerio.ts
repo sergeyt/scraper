@@ -45,6 +45,10 @@ class CheerioEngine implements IEngine {
     });
     return Promise.resolve(result);
   }
+
+  close(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 }
 
 export async function makeCheerioEngine(url: string): Promise<IEngine> {
