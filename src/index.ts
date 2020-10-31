@@ -1,6 +1,4 @@
-import isNil from "lodash/isNil";
-import forEach from "lodash/forEach";
-import mapValues from "lodash/mapValues";
+import _ from "lodash";
 import { strip } from "./utils";
 
 import unsplash from "./sources/unsplash";
@@ -31,11 +29,11 @@ async function parse(source: Source, root: IEngine, query) {
       if (!Array.isArray(values)) {
         continue;
       }
-      for (const val of values.filter((v) => !isNil(v) && v !== "")) {
+      for (const val of values.filter((v) => !_.isNil(v) && v !== "")) {
         if (content) {
           content.add(val);
         } else {
-          forEach(val, (v, k) => {
+          _.forEach(val, (v, k) => {
             ensureSet(k);
             data[k].add(v);
           });
@@ -108,7 +106,7 @@ async function parse(source: Source, root: IEngine, query) {
 
   return {
     source: { name: source.name, url: source.url },
-    data: mapValues(data, (v) => Array.from(v)),
+    data: _.mapValues(data, (v) => Array.from(v)),
   };
 }
 
@@ -145,6 +143,7 @@ function makeParser(source: Source) {
 type Options = {
   type?: SourceType;
   sources?: Source[];
+  include?: string[]; // filter sources by name
 };
 
 export function fetchData(query: Query, options: Options = {}) {
@@ -152,7 +151,12 @@ export function fetchData(query: Query, options: Options = {}) {
     options.sources ||
     sources.filter((s) => {
       if (options.type) {
-        return s.type === options.type;
+        return s.type === options.type || s.type === "universal";
+      }
+      if (!_.isEmpty(options.include)) {
+        return options.include.some(
+          (name) => s.name.toLowerCase() === name.toLowerCase()
+        );
       }
       return true;
     });
