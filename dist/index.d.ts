@@ -1,6 +1,12 @@
+import { Source, Query, SourceType } from "./types";
+export declare const sources: Source[];
+declare type Options = {
+  type?: SourceType;
+  sources?: Source[];
+};
 export declare function fetchData(
-  text: string,
-  lang?: string
+  query: Query,
+  options?: Options
 ): Promise<
   (
     | {
@@ -21,3 +27,4 @@ export declare function fetchData(
       }
   )[]
 >;
+export {};
