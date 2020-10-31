@@ -11,7 +11,7 @@ import howjsay from "./sources/howjsay";
 import { IEngine, Source, Query, SourceType } from "./types";
 import { makeEngine } from "./factory";
 
-export const sources = [unsplash, wordnik, macmillan, forvo, howjsay];
+export const sources: Source[] = [unsplash, wordnik, macmillan, forvo, howjsay];
 
 async function parse(source: Source, root: IEngine, query) {
   const data = {};
