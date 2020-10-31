@@ -2,6 +2,7 @@
   "name": "lingua-scraper",
   "version": "0.2.1",
   "main": "dist/bundle.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "build": "microbundle"
