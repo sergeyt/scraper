@@ -143,20 +143,35 @@ function makeParser(source: Source) {
 type Options = {
   type?: SourceType;
   sources?: Source[];
-  include?: string[]; // filter sources by name
+  include?: string[]; // include only sources by name
+  exclude?: string[]; // exclude sources by name
 };
 
 export function fetchData(query: Query, options: Options = {}) {
   const src =
     options.sources ||
     sources.filter((s) => {
-      if (options.type) {
-        return s.type === options.type || s.type === "universal";
+      if (
+        options.type &&
+        !(s.type === options.type || s.type === "universal")
+      ) {
+        return false;
       }
-      if (!_.isEmpty(options.include)) {
-        return options.include.some(
+      if (
+        !_.isEmpty(options.include) &&
+        !options.include.some(
           (name) => s.name.toLowerCase() === name.toLowerCase()
-        );
+        )
+      ) {
+        return false;
+      }
+      if (
+        !_.isEmpty(options.exclude) &&
+        options.exclude.some(
+          (name) => s.name.toLowerCase() === name.toLowerCase()
+        )
+      ) {
+        return false;
       }
       return true;
     });
