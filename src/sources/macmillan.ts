@@ -1,10 +1,9 @@
-import { Source } from '../types';
+import { Source } from "../types";
 
 const macmillan: Source = {
   name: "macmillan",
   url: "https://www.macmillandictionary.com",
-  makeUrl: ({ text }) =>
-    `https://www.macmillandictionary.com/dictionary/british/${text}`,
+  makeUrl: ({ text }) => `/dictionary/british/${text}`,
   plan: [
     {
       selector: ".PRON",

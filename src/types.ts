@@ -17,7 +17,7 @@ export type Source = {
   makeUrl?(query: Query): string;
   engine?: EngineType;
   plan?: ExecutionPlan[];
-  getData(query: Query): Promise<any>;
+  getData?(query: Query): Promise<any>;
 };
 
 export interface IElement {

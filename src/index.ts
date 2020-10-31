@@ -3,6 +3,7 @@ import forEach from "lodash/forEach";
 import mapValues from "lodash/mapValues";
 import { strip } from "./utils";
 
+import unsplash from "./sources/unsplash";
 import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
@@ -10,7 +11,7 @@ import howjsay from "./sources/howjsay";
 import { IEngine, Source } from "./types";
 import { makeEngine } from "./factory";
 
-const sources = [wordnik, macmillan, forvo, howjsay];
+const sources = [unsplash, wordnik, macmillan, forvo, howjsay];
 
 async function parse(source: Source, root: IEngine, query) {
   const data = {};
@@ -28,7 +29,7 @@ async function parse(source: Source, root: IEngine, query) {
     for (const element of elements) {
       const values = await extract(item, element);
       if (!Array.isArray(values)) {
-        return;
+        continue;
       }
       for (const val of values.filter((v) => !isNil(v) && v !== "")) {
         if (content) {
@@ -43,37 +44,52 @@ async function parse(source: Source, root: IEngine, query) {
     }
   };
 
-  const term_handler = async (item, elem) => {
-    const text = strip(await elem.textContent());
-    if (!text) {
-      return undefined;
+  const is_excluded = (item, val: string) => {
+    if (item.exclude) {
+      return item.exclude.some((s: string) => {
+        if (s.startsWith("^")) {
+          return val.startsWith(s.substr(1));
+        }
+        return val === s;
+      });
     }
-    if (item.exclude && item.exclude.includes(text)) {
-      return undefined;
-    }
-    return [text];
+    return false;
   };
 
-  const get_values = async (elem, commands) => {
+  const term_handler = async (item, elem) => {
+    const val = strip(await elem.textContent());
+    if (!val) {
+      return undefined;
+    }
+    if (is_excluded(item, val)) {
+      return undefined;
+    }
+    return [val];
+  };
+
+  const get_values = async (item, elem, commands) => {
     const results = [];
     for (const cmd of commands) {
+      let val: string;
       if (cmd.startsWith("@")) {
-        const val = await elem.getAttribute(cmd.substr(1));
-        results.push(val);
+        val = await elem.getAttribute(cmd.substr(1));
       } else {
-        const val = strip(await elem.text());
-        results.push(val);
+        val = strip(await elem.text());
       }
+      if (is_excluded(item, val)) {
+        continue;
+      }
+      results.push(val);
     }
-    return results;
+    return results.length === 0 ? undefined : results;
   };
 
   const audio_handler = async (item, elem) => {
-    return await get_values(elem, item.audio);
+    return await get_values(item, elem, item.audio);
   };
 
   const visual_handler = async (item, elem) => {
-    return await get_values(elem, item.visual);
+    return await get_values(item, elem, item.visual);
   };
 
   const parse_handler = (item, elem) => item.parse(elem);
@@ -110,7 +126,10 @@ function makeParser(source: Source) {
       }
     }
 
-    const url = source.makeUrl(query);
+    let url = source.makeUrl(query);
+    if (url.startsWith("/")) {
+      url = source.url + url;
+    }
 
     try {
       const engine = await makeEngine(source.engine, url);
