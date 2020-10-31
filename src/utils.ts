@@ -1,7 +1,7 @@
-import trim from "lodash/trim";
+import _ from "lodash";
 
 export function strip(s?: string) {
-  return trim(s?.trim(), "\u200b");
+  return _.trim(s?.trim(), "\u200b");
 }
 
 function isNode() {
