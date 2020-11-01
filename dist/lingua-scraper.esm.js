@@ -1265,6 +1265,229 @@ var cambridge = {
   }]
 };
 
+var urban = {
+  type: "universal",
+  name: "urban-dictionary",
+  url: "https://www.urbandictionary.com",
+  makeUrl: function makeUrl(_ref) {
+    var text = _ref.text;
+    return "/define.php?term=" + encodeURIComponent(text);
+  },
+  plan: [{
+    selector: "#content div.def-panel a.play-sound",
+    audio: ["@data-urls"],
+    map: function map(s) {
+      return _.trimEnd(_.trimStart(s, "[\""), "\"]");
+    }
+  }, {
+    selector: "#content div.def-panel div.meaning",
+    term: "definition"
+  }]
+};
+
+var EngineStub = /*#__PURE__*/function () {
+  function EngineStub() {}
+
+  var _proto = EngineStub.prototype;
+
+  _proto.$$ = function $$(selector) {
+    return Promise.resolve([]);
+  };
+
+  _proto.close = function close() {
+    return Promise.resolve(undefined);
+  };
+
+  return EngineStub;
+}();
+
+var ElementImpl = /*#__PURE__*/function () {
+  function ElementImpl(page, elem) {
+    this.page = page;
+    this.elem = elem;
+  }
+
+  var _proto2 = ElementImpl.prototype;
+
+  _proto2.$$ = /*#__PURE__*/function () {
+    var _$$ = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(selector) {
+      var _this = this;
+
+      var elems;
+      return runtime_1.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return this.elem.$$(selector);
+
+            case 2:
+              elems = _context.sent;
+              return _context.abrupt("return", elems.map(function (e) {
+                return new ElementImpl(_this.page, e);
+              }));
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function $$(_x) {
+      return _$$.apply(this, arguments);
+    }
+
+    return $$;
+  }();
+
+  _proto2.getAttribute = function getAttribute(name) {
+    return this.elem.getAttribute(name);
+  };
+
+  _proto2.textContent = function textContent() {
+    return this.elem.textContent();
+  };
+
+  return ElementImpl;
+}();
+
+var EngineImpl = /*#__PURE__*/function () {
+  function EngineImpl(browser, page) {
+    this.browser = browser;
+    this.page = page;
+  }
+
+  var _proto3 = EngineImpl.prototype;
+
+  _proto3.$$ = /*#__PURE__*/function () {
+    var _$$2 = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(selector) {
+      var _this2 = this;
+
+      var elems;
+      return runtime_1.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return this.page.waitForSelector(selector, {
+                timeout: 5000
+              });
+
+            case 3:
+              _context2.next = 7;
+              break;
+
+            case 5:
+              _context2.prev = 5;
+              _context2.t0 = _context2["catch"](0);
+
+            case 7:
+              _context2.next = 9;
+              return this.page.$$(selector);
+
+            case 9:
+              elems = _context2.sent;
+              return _context2.abrupt("return", elems.map(function (e) {
+                return new ElementImpl(_this2.page, e);
+              }));
+
+            case 11:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this, [[0, 5]]);
+    }));
+
+    function $$(_x2) {
+      return _$$2.apply(this, arguments);
+    }
+
+    return $$;
+  }();
+
+  _proto3.close = /*#__PURE__*/function () {
+    var _close = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
+      return runtime_1.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return this.page.close();
+
+            case 2:
+              _context3.next = 4;
+              return this.browser.close();
+
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this);
+    }));
+
+    function close() {
+      return _close.apply(this, arguments);
+    }
+
+    return close;
+  }();
+
+  return EngineImpl;
+}();
+
+function makePlaywrightEngine(_x3) {
+  return _makePlaywrightEngine.apply(this, arguments);
+}
+
+function _makePlaywrightEngine() {
+  _makePlaywrightEngine = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(url) {
+    var _require, chromium, browser, page;
+
+    return runtime_1.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            if (!IS_BROWSER) {
+              _context4.next = 2;
+              break;
+            }
+
+            return _context4.abrupt("return", new EngineStub());
+
+          case 2:
+            // TODO support other browser
+            _require = require("playwright"), chromium = _require.chromium;
+            _context4.next = 5;
+            return chromium.launch();
+
+          case 5:
+            browser = _context4.sent;
+            _context4.next = 8;
+            return browser.newPage();
+
+          case 8:
+            page = _context4.sent;
+            _context4.next = 11;
+            return page["goto"](url);
+
+          case 11:
+            return _context4.abrupt("return", new EngineImpl(browser, page));
+
+          case 12:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _makePlaywrightEngine.apply(this, arguments);
+}
+
 var CheerioElement = /*#__PURE__*/function () {
   function CheerioElement($, elem) {
     this.$ = $;
@@ -1429,197 +1652,6 @@ function _makeCheerioEngine() {
   return _makeCheerioEngine.apply(this, arguments);
 }
 
-var ElementImpl = /*#__PURE__*/function () {
-  function ElementImpl(page, elem) {
-    this.page = page;
-    this.elem = elem;
-  }
-
-  var _proto = ElementImpl.prototype;
-
-  _proto.$$ = /*#__PURE__*/function () {
-    var _$$ = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(selector) {
-      var _this = this;
-
-      var elems;
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return this.elem.$$(selector);
-
-            case 2:
-              elems = _context.sent;
-              return _context.abrupt("return", elems.map(function (e) {
-                return new ElementImpl(_this.page, e);
-              }));
-
-            case 4:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function $$(_x) {
-      return _$$.apply(this, arguments);
-    }
-
-    return $$;
-  }();
-
-  _proto.getAttribute = function getAttribute(name) {
-    return this.elem.getAttribute(name);
-  };
-
-  _proto.textContent = function textContent() {
-    return this.elem.textContent();
-  };
-
-  return ElementImpl;
-}();
-
-var EngineImpl = /*#__PURE__*/function () {
-  function EngineImpl(browser, page) {
-    this.browser = browser;
-    this.page = page;
-  }
-
-  var _proto2 = EngineImpl.prototype;
-
-  _proto2.$$ = /*#__PURE__*/function () {
-    var _$$2 = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(selector) {
-      var _this2 = this;
-
-      var elems;
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return this.page.waitForSelector(selector, {
-                timeout: 5000
-              });
-
-            case 3:
-              _context2.next = 7;
-              break;
-
-            case 5:
-              _context2.prev = 5;
-              _context2.t0 = _context2["catch"](0);
-
-            case 7:
-              _context2.next = 9;
-              return this.page.$$(selector);
-
-            case 9:
-              elems = _context2.sent;
-              return _context2.abrupt("return", elems.map(function (e) {
-                return new ElementImpl(_this2.page, e);
-              }));
-
-            case 11:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this, [[0, 5]]);
-    }));
-
-    function $$(_x2) {
-      return _$$2.apply(this, arguments);
-    }
-
-    return $$;
-  }();
-
-  _proto2.close = /*#__PURE__*/function () {
-    var _close = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
-      return runtime_1.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return this.page.close();
-
-            case 2:
-              _context3.next = 4;
-              return this.browser.close();
-
-            case 4:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, this);
-    }));
-
-    function close() {
-      return _close.apply(this, arguments);
-    }
-
-    return close;
-  }();
-
-  return EngineImpl;
-}();
-
-function makePlaywrightEngine(_x3) {
-  return _makePlaywrightEngine.apply(this, arguments);
-}
-
-function _makePlaywrightEngine() {
-  _makePlaywrightEngine = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(url) {
-    var _require, chromium, browser, page;
-
-    return runtime_1.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            if (!IS_BROWSER) {
-              _context4.next = 4;
-              break;
-            }
-
-            _context4.next = 3;
-            return makeCheerioEngine(url);
-
-          case 3:
-            return _context4.abrupt("return", _context4.sent);
-
-          case 4:
-            // TODO support other browser
-            _require = require("playwright"), chromium = _require.chromium;
-            _context4.next = 7;
-            return chromium.launch();
-
-          case 7:
-            browser = _context4.sent;
-            _context4.next = 10;
-            return browser.newPage();
-
-          case 10:
-            page = _context4.sent;
-            _context4.next = 13;
-            return page["goto"](url);
-
-          case 13:
-            return _context4.abrupt("return", new EngineImpl(browser, page));
-
-          case 14:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-  return _makePlaywrightEngine.apply(this, arguments);
-}
-
 function makeEngine(type, url) {
   if (type === "playwright") {
     return makePlaywrightEngine(url);
@@ -1628,7 +1660,7 @@ function makeEngine(type, url) {
   return makeCheerioEngine(url);
 }
 
-var sources = [unsplash, wordnik, macmillan, webster, cambridge, forvo, howjsay];
+var sources = [unsplash, wordnik, macmillan, webster, cambridge, urban, forvo, howjsay];
 
 function parse(_x, _x2, _x3) {
   return _parse.apply(this, arguments);
@@ -1815,7 +1847,7 @@ function _parse() {
                         results = [];
 
                         if (!_.isArray(commands)) {
-                          _context4.next = 30;
+                          _context4.next = 33;
                           break;
                         }
 
@@ -1823,7 +1855,7 @@ function _parse() {
 
                       case 3:
                         if ((_step3 = _iterator3()).done) {
-                          _context4.next = 28;
+                          _context4.next = 31;
                           break;
                         }
 
@@ -1874,34 +1906,52 @@ function _parse() {
                           break;
                         }
 
-                        return _context4.abrupt("continue", 26);
+                        return _context4.abrupt("continue", 29);
 
                       case 25:
+                        if (item.map) {
+                          val = item.map(val);
+                        }
+
+                        if (val) {
+                          _context4.next = 28;
+                          break;
+                        }
+
+                        return _context4.abrupt("continue", 29);
+
+                      case 28:
                         results.push(val);
 
-                      case 26:
+                      case 29:
                         _context4.next = 3;
                         break;
 
-                      case 28:
-                        _context4.next = 34;
+                      case 31:
+                        _context4.next = 37;
                         break;
 
-                      case 30:
-                        _context4.next = 32;
+                      case 33:
+                        _context4.next = 35;
                         return commands(elem);
 
-                      case 32:
+                      case 35:
                         _val = _context4.sent;
 
                         if (!is_excluded(item, _val)) {
-                          results.push(_val);
+                          if (item.map) {
+                            _val = item.map(_val);
+                          }
+
+                          if (_val) {
+                            results.push(_val);
+                          }
                         }
 
-                      case 34:
+                      case 37:
                         return _context4.abrupt("return", results.length === 0 ? undefined : results);
 
-                      case 35:
+                      case 38:
                       case "end":
                         return _context4.stop();
                     }
