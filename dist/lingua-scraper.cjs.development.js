@@ -1762,7 +1762,8 @@ function _makePlaywrightEngine() {
   return _makePlaywrightEngine.apply(this, arguments);
 }
 
-var fetch = /*#__PURE__*/require("isomorphic-fetch");
+var _require = /*#__PURE__*/require("fetch-ponyfill")(),
+    fetch = _require.fetch;
 
 var cheerio = /*#__PURE__*/require("cheerio");
 
