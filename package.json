@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdx build",
+    "build": "tsdx build --format cjs",
     "ci": "yarn test && yarn build",
     "test": "tsdx test"
   },
@@ -20,8 +20,7 @@
     "cheerio": "^1.0.0-rc.3",
     "isomorphic-unfetch": "^3.1.0",
     "js-base64": "^3.5.2",
-    "lodash": "^4.17.20",
-    "playwright": "^1.5.2"
+    "lodash": "^4.17.20"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.22",
@@ -33,5 +32,8 @@
     "pretty-quick": "^3.1.0",
     "tsdx": "^0.14.1",
     "typescript": "^4.0.5"
+  },
+  "peerDependencies": {
+    "playwright": "^1.5.2"
   }
 }

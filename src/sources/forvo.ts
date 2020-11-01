@@ -1,4 +1,6 @@
-import _ from "lodash";
+const trimEnd = require("lodash/trimEnd");
+const trimStart = require("lodash/trimStart");
+const isEmpty = require("lodash/isEmpty");
 import { Base64 } from "js-base64";
 import { strip } from "../utils";
 import { IElement, Source } from "../types";
@@ -48,9 +50,9 @@ function parse_from(s) {
   if (!s) {
     return undefined;
   }
-  s = _.trimEnd(_.trimStart(s, "("), ")");
+  s = trimEnd(trimStart(s, "("), ")");
   const a = s.split(",");
-  if (_.isEmpty(a)) {
+  if (isEmpty(a)) {
     return undefined;
   }
   const result: any = { gender: translate_gender(a[0]) };

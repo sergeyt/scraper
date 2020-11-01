@@ -1,4 +1,9 @@
-import _ from "lodash";
+const forEach = require("lodash/forEach");
+const isArray = require("lodash/isArray");
+const isString = require("lodash/isString");
+const isNil = require("lodash/isNil");
+const mapValues = require("lodash/mapValues");
+const isEmpty = require("lodash/isEmpty");
 import { strip } from "./utils";
 
 import unsplash from "./sources/unsplash";
@@ -39,14 +44,14 @@ async function parse(source: Source, root: IEngine, query) {
     const elements = await root.$$(item.selector);
     for (const element of elements) {
       const values = await extract(item, element);
-      if (!Array.isArray(values)) {
+      if (!isArray(values)) {
         continue;
       }
-      for (const val of values.filter((v) => !_.isNil(v) && v !== "")) {
+      for (const val of values.filter((v) => !isNil(v) && v !== "")) {
         if (content) {
           content.add(val);
         } else {
-          _.forEach(val, (v, k) => {
+          forEach(val, (v, k) => {
             ensureSet(k);
             data[k].add(v);
           });
@@ -92,10 +97,10 @@ async function parse(source: Source, root: IEngine, query) {
 
   const get_values = async (item, elem, commands) => {
     const results = [];
-    if (_.isArray(commands)) {
+    if (isArray(commands)) {
       for (const cmd of commands) {
         let val: string;
-        if (_.isString(cmd)) {
+        if (isString(cmd)) {
           if (cmd.startsWith("@")) {
             val = await elem.getAttribute(cmd.substr(1));
           } else {
@@ -154,7 +159,7 @@ async function parse(source: Source, root: IEngine, query) {
 
   return {
     source: { name: source.name, url: source.url },
-    data: _.mapValues(data, (v) => Array.from(v)),
+    data: mapValues(data, (v) => Array.from(v)),
   };
 }
 
@@ -206,7 +211,7 @@ export function fetchData(query: Query, options: Options = {}) {
         return false;
       }
       if (
-        !_.isEmpty(options.include) &&
+        !isEmpty(options.include) &&
         !options.include.some(
           (name) => s.name.toLowerCase() === name.toLowerCase()
         )
@@ -214,7 +219,7 @@ export function fetchData(query: Query, options: Options = {}) {
         return false;
       }
       if (
-        !_.isEmpty(options.exclude) &&
+        !isEmpty(options.exclude) &&
         options.exclude.some(
           (name) => s.name.toLowerCase() === name.toLowerCase()
         )

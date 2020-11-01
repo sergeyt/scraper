@@ -12,13 +12,11 @@ export declare function fetchData(query: Query, options?: Options): Promise<({
         url: string;
     };
     data: any;
-    error?: undefined;
 } | {
     source: {
         name: string;
         url: string;
     };
     error: any;
-    data?: undefined;
 })[]>;
 export {};

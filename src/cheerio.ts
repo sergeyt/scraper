@@ -1,5 +1,5 @@
-import fetch from "isomorphic-unfetch";
-import cheerio from "cheerio";
+const fetch = require("isomorphic-unfetch");
+const cheerio = require("cheerio");
 import { IElement, IEngine } from "./types";
 import { IS_BROWSER } from "./utils";
 

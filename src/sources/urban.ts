@@ -1,4 +1,5 @@
-import _ from "lodash";
+const trimEnd = require("lodash/trimEnd");
+const trimStart = require("lodash/trimStart");
 import { Source } from "../types";
 
 const urban: Source = {
@@ -10,7 +11,7 @@ const urban: Source = {
     {
       selector: "#content div.def-panel a.play-sound",
       audio: ["@data-urls"],
-      map: (s) => _.trimEnd(_.trimStart(s, `["`), `"]`),
+      map: (s) => trimEnd(trimStart(s, `["`), `"]`),
     },
     {
       selector: "#content div.def-panel div.meaning",
