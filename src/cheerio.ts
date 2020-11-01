@@ -56,12 +56,14 @@ export async function makeCheerioEngine(url: string): Promise<IEngine> {
     url = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
   }
 
-  const resp = await fetch(url, {
-    headers: {
-      "User-Agent": "lingua-bot",
-      Accept: "text/html,application/xhtml+xml",
-    },
-  });
+  const headers: any = {
+    Accept: "text/html,application/xhtml+xml",
+  };
+  if (!IS_BROWSER) {
+    headers["User-Agent"] = "lingua-bot";
+  }
+
+  const resp = await fetch(url, { headers });
 
   if (!resp.ok) {
     throw new Error(resp.statusText);
