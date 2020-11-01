@@ -8,6 +8,7 @@ import forvo from "./sources/forvo";
 import howjsay from "./sources/howjsay";
 import webster from "./sources/webster";
 import cambridge from "./sources/cambridge";
+import urban from "./sources/urban";
 
 import { IEngine, Source, Query, SourceType } from "./types";
 import { makeEngine } from "./factory";
@@ -18,6 +19,7 @@ export const sources: Source[] = [
   macmillan,
   webster,
   cambridge,
+  urban,
   forvo,
   howjsay,
 ];
@@ -105,12 +107,23 @@ async function parse(source: Source, root: IEngine, query) {
         if (is_excluded(item, val)) {
           continue;
         }
+        if (item.map) {
+          val = item.map(val);
+        }
+        if (!val) {
+          continue;
+        }
         results.push(val);
       }
     } else {
-      const val = await commands(elem);
+      let val = await commands(elem);
       if (!is_excluded(item, val)) {
-        results.push(val);
+        if (item.map) {
+          val = item.map(val);
+        }
+        if (val) {
+          results.push(val);
+        }
       }
     }
 
