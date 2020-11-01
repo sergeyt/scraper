@@ -1,7 +1,16 @@
 import { Browser, Page, ElementHandle } from "playwright";
 import { IEngine, IElement } from "./types";
 import { IS_BROWSER } from "./utils";
-import { makeCheerioEngine } from "./cheerio";
+
+class EngineStub implements IEngine {
+  $$(selector: string): Promise<IElement[]> {
+    return Promise.resolve([]);
+  }
+
+  close(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+}
 
 class ElementImpl implements IElement {
   page: Page;
@@ -53,8 +62,7 @@ class EngineImpl implements IEngine {
 
 export async function makePlaywrightEngine(url: string) {
   if (IS_BROWSER) {
-    // TODO or return empty engine
-    return await makeCheerioEngine(url);
+    return new EngineStub();
   }
   // TODO support other browser
   const { chromium } = require("playwright");
