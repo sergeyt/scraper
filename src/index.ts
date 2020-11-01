@@ -15,7 +15,7 @@ import webster from "./sources/webster";
 import cambridge from "./sources/cambridge";
 import urban from "./sources/urban";
 
-import { IEngine, Source, Query, SourceType } from "./types";
+import { IEngine, Source, Query, SourceType, SourceMeta } from "./types";
 import { makeEngine } from "./factory";
 
 export const sources: Source[] = [
@@ -29,7 +29,25 @@ export const sources: Source[] = [
   howjsay,
 ];
 
-async function parse(source: Source, root: IEngine, query) {
+function takeMeta(source: Source): SourceMeta {
+  return {
+    type: source.type,
+    name: source.name,
+    url: source.url,
+  };
+}
+
+type ParseResult = {
+  source: SourceMeta;
+  data: {
+    audio: any[];
+    visual: any[];
+    definition: any[];
+    [other: string]: any[];
+  };
+};
+
+async function parse(source: Source, root: IEngine): Promise<ParseResult> {
   const data = {};
 
   const ensureSet = (key) => {
@@ -158,7 +176,7 @@ async function parse(source: Source, root: IEngine, query) {
   }
 
   return {
-    source: { name: source.name, url: source.url },
+    source: takeMeta(source),
     data: mapValues(data, (v) => Array.from(v)),
   };
 }
@@ -170,7 +188,7 @@ function makeParser(source: Source) {
     if (source.getData) {
       try {
         const data = await source.getData(query);
-        return { source: { name: source.name, url: source.url }, data };
+        return { source: takeMeta(source), data };
       } catch (error) {
         console.log("error", source.name, error);
         return { source: { name: source.name, url: source.url }, error };
@@ -184,7 +202,7 @@ function makeParser(source: Source) {
 
     try {
       const engine = await makeEngine(source.engine, url);
-      const results = parse(source, engine, query);
+      const results = parse(source, engine);
       return results;
     } catch (error) {
       console.log("error", source.name, error);

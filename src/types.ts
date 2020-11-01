@@ -17,10 +17,13 @@ export type Query = { text: string; lang?: string };
 
 export type SourceType = "universal" | "audio" | "visual" | "text";
 
-export type Source = {
+export type SourceMeta = {
   type: SourceType;
   name: string;
   url: string;
+};
+
+export type Source = SourceMeta & {
   makeUrl?(query: Query): string;
   engine?: EngineType;
   plan?: ExecutionPlan[];
