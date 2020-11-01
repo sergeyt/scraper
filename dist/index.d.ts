@@ -1,4 +1,4 @@
-import { Source, Query, SourceType, SourceMeta } from './types';
+import { Source, Query, SourceType, SourceMeta } from "./types";
 export declare const sources: Source[];
 declare type Options = {
     type?: SourceType;

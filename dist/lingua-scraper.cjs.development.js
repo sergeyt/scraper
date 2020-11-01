@@ -1762,7 +1762,7 @@ function _makePlaywrightEngine() {
   return _makePlaywrightEngine.apply(this, arguments);
 }
 
-var fetch = /*#__PURE__*/require("isomorphic-unfetch");
+var fetch = /*#__PURE__*/require("isomorphic-fetch");
 
 var cheerio = /*#__PURE__*/require("cheerio");
 
