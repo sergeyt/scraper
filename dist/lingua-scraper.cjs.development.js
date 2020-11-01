@@ -1886,7 +1886,7 @@ function makeCheerioEngine(_x3) {
 
 function _makeCheerioEngine() {
   _makeCheerioEngine = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(url) {
-    var resp, html;
+    var headers, resp, html;
     return runtime_1.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -1895,33 +1895,38 @@ function _makeCheerioEngine() {
               url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
             }
 
-            _context4.next = 3;
+            headers = {
+              Accept: "text/html,application/xhtml+xml"
+            };
+
+            if (!IS_BROWSER) {
+              headers["User-Agent"] = "lingua-bot";
+            }
+
+            _context4.next = 5;
             return fetch(url, {
-              headers: {
-                "User-Agent": "lingua-bot",
-                Accept: "text/html,application/xhtml+xml"
-              }
+              headers: headers
             });
 
-          case 3:
+          case 5:
             resp = _context4.sent;
 
             if (resp.ok) {
-              _context4.next = 6;
+              _context4.next = 8;
               break;
             }
 
             throw new Error(resp.statusText);
 
-          case 6:
-            _context4.next = 8;
+          case 8:
+            _context4.next = 10;
             return resp.text();
 
-          case 8:
+          case 10:
             html = _context4.sent;
             return _context4.abrupt("return", new CheerioEngine(html));
 
-          case 10:
+          case 12:
           case "end":
             return _context4.stop();
         }
