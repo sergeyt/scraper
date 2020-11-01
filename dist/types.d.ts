@@ -15,10 +15,12 @@ export declare type Query = {
     lang?: string;
 };
 export declare type SourceType = "universal" | "audio" | "visual" | "text";
-export declare type Source = {
+export declare type SourceMeta = {
     type: SourceType;
     name: string;
     url: string;
+};
+export declare type Source = SourceMeta & {
     makeUrl?(query: Query): string;
     engine?: EngineType;
     plan?: ExecutionPlan[];

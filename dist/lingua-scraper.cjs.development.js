@@ -1951,12 +1951,20 @@ var mapValues = /*#__PURE__*/require("lodash/mapValues");
 var isEmpty$1 = /*#__PURE__*/require("lodash/isEmpty");
 var sources = [unsplash, wordnik, macmillan, webster, cambridge, urban, forvo, howjsay];
 
-function parse(_x, _x2, _x3) {
+function takeMeta(source) {
+  return {
+    type: source.type,
+    name: source.name,
+    url: source.url
+  };
+}
+
+function parse(_x, _x2) {
   return _parse.apply(this, arguments);
 }
 
 function _parse() {
-  _parse = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(source, root, query) {
+  _parse = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(source, root) {
     var data, ensureSet, collect, is_excluded, term_handler, get_values, audio_handler, visual_handler, parse_handler, _iterator4, _step4, item;
 
     return runtime_1.wrap(function _callee7$(_context7) {
@@ -2036,7 +2044,7 @@ function _parse() {
                 }, _callee2);
               }));
 
-              return function collect(_x5, _x6, _x7) {
+              return function collect(_x4, _x5, _x6) {
                 return _ref3.apply(this, arguments);
               };
             }();
@@ -2120,7 +2128,7 @@ function _parse() {
                 }, _callee3);
               }));
 
-              return function term_handler(_x8, _x9) {
+              return function term_handler(_x7, _x8) {
                 return _ref4.apply(this, arguments);
               };
             }();
@@ -2248,7 +2256,7 @@ function _parse() {
                 }, _callee4);
               }));
 
-              return function get_values(_x10, _x11, _x12) {
+              return function get_values(_x9, _x10, _x11) {
                 return _ref5.apply(this, arguments);
               };
             }();
@@ -2273,7 +2281,7 @@ function _parse() {
                 }, _callee5);
               }));
 
-              return function audio_handler(_x13, _x14) {
+              return function audio_handler(_x12, _x13) {
                 return _ref6.apply(this, arguments);
               };
             }();
@@ -2298,7 +2306,7 @@ function _parse() {
                 }, _callee6);
               }));
 
-              return function visual_handler(_x15, _x16) {
+              return function visual_handler(_x14, _x15) {
                 return _ref7.apply(this, arguments);
               };
             }();
@@ -2370,10 +2378,7 @@ function _parse() {
 
           case 32:
             return _context7.abrupt("return", {
-              source: {
-                name: source.name,
-                url: source.url
-              },
+              source: takeMeta(source),
               data: mapValues(data, function (v) {
                 return Array.from(v);
               })
@@ -2416,10 +2421,7 @@ function makeParser(source) {
             case 6:
               data = _context.sent;
               return _context.abrupt("return", {
-                source: {
-                  name: source.name,
-                  url: source.url
-                },
+                source: takeMeta(source),
                 data: data
               });
 
@@ -2448,7 +2450,7 @@ function makeParser(source) {
 
             case 19:
               engine = _context.sent;
-              results = parse(source, engine, query);
+              results = parse(source, engine);
               return _context.abrupt("return", results);
 
             case 24:
@@ -2471,7 +2473,7 @@ function makeParser(source) {
       }, _callee, null, [[3, 10], [16, 24]]);
     }));
 
-    return function (_x4) {
+    return function (_x3) {
       return _ref2.apply(this, arguments);
     };
   }();
