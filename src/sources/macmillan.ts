@@ -4,7 +4,7 @@ const macmillan: Source = {
   type: "universal",
   name: "macmillan",
   url: "https://www.macmillandictionary.com",
-  makeUrl: ({ text }) => `/dictionary/british/${text}`,
+  makeUrl: ({ text }) => `/dictionary/british/${encodeURIComponent(text)}`,
   plan: [
     {
       selector: ".audio_play_button",

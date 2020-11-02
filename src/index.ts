@@ -186,19 +186,21 @@ function makeParser(source: Source) {
   return async ({ text, lang }: Query): Promise<ParseResult> => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
+    let url = source.makeUrl(query);
+    if (url.startsWith("/")) {
+      url = source.url + url;
+    }
+
     if (source.getData) {
       try {
-        const data = await source.getData(query);
-        return { source: takeMeta(source), data };
+        const data = await source.getData(url, query);
+        const result = { source: takeMeta(source), data };
+        result.source.url = url;
+        return result;
       } catch (error) {
         console.log("error", source.name, error);
         return { source: takeMeta(source), error };
       }
-    }
-
-    let url = source.makeUrl(query);
-    if (url.startsWith("/")) {
-      url = source.url + url;
     }
 
     try {
