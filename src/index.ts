@@ -39,12 +39,13 @@ function takeMeta(source: Source): SourceMeta {
 
 type ParseResult = {
   source: SourceMeta;
-  data: {
+  data?: {
     audio: any[];
     visual: any[];
     definition: any[];
     [other: string]: any[];
   };
+  error?: any;
 };
 
 async function parse(source: Source, root: IEngine): Promise<ParseResult> {
@@ -182,7 +183,7 @@ async function parse(source: Source, root: IEngine): Promise<ParseResult> {
 }
 
 function makeParser(source: Source) {
-  return async ({ text, lang }: Query) => {
+  return async ({ text, lang }: Query): Promise<ParseResult> => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
     if (source.getData) {
@@ -191,7 +192,7 @@ function makeParser(source: Source) {
         return { source: takeMeta(source), data };
       } catch (error) {
         console.log("error", source.name, error);
-        return { source: { name: source.name, url: source.url }, error };
+        return { source: takeMeta(source), error };
       }
     }
 
@@ -202,11 +203,12 @@ function makeParser(source: Source) {
 
     try {
       const engine = await makeEngine(source.engine, url);
-      const results = parse(source, engine);
+      const results = await parse(source, engine);
+      results.source.url = url;
       return results;
     } catch (error) {
       console.log("error", source.name, error);
-      return { source: { name: source.name, url: source.url }, error };
+      return { source: takeMeta(source), error };
     }
   };
 }
