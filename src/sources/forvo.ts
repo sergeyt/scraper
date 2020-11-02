@@ -4,6 +4,7 @@ const isEmpty = require("lodash/isEmpty");
 import { Base64 } from "js-base64";
 import { strip } from "../utils";
 import { IElement, Source } from "../types";
+import { translate as translate_country } from "../data/rucountries";
 
 const AUDIO_HOST = "https://audio00.forvo.com/audios/mp3";
 const encode = encodeURIComponent;
@@ -38,14 +39,6 @@ function translate_gender(val) {
   return val;
 }
 
-function translate_counry(val) {
-  val = strip(val);
-  // r = dictcom.translate(val)
-  // if r is not None and len(r['tran']) > 0:
-  //     return r['tran'][0].lower()
-  return val;
-}
-
 function parse_from(s) {
   if (!s) {
     return undefined;
@@ -57,7 +50,7 @@ function parse_from(s) {
   }
   const result: any = { gender: translate_gender(a[0]) };
   if (a.length === 2) {
-    result.country = translate_counry(a[1]);
+    result.country = translate_country(a[1]);
   }
   return result;
 }

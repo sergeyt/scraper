@@ -182,7 +182,7 @@ async function parse(source: Source, root: IEngine): Promise<ParseResult> {
   };
 }
 
-function makeParser(source: Source) {
+export function makeParser(source: Source) {
   return async ({ text, lang }: Query): Promise<ParseResult> => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
