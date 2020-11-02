@@ -887,7 +887,7 @@ var macmillan = {
   url: "https://www.macmillandictionary.com",
   makeUrl: function makeUrl(_ref) {
     var text = _ref.text;
-    return "/dictionary/british/" + text;
+    return "/dictionary/british/" + encodeURIComponent(text);
   },
   plan: [{
     selector: ".audio_play_button",
@@ -1181,6 +1181,13 @@ const gBase64 = {
     extendBuiltins: extendBuiltins,
 };
 
+var pairs = [["австралия", "australia"], ["вануату", "vanuatu"], ["кирибати", "kiribati"], ["маршалловы острова", "marshall islands"], ["науру", "nauru"], ["новая зеландия", "new zealand"], ["палау", "palau"], ["папуа — новая гвинея", "papua new guinea"], ["самоа", "samoa"], ["соломоновы острова", "solomon islands"], ["тонга", "tonga"], ["тувалу", "tuvalu"], ["федеративные штаты микронезии", "federated states of micronesia"], ["фиджи", "fiji"], ["абхазия", "abkhazia"], ["азербайджан", "azerbaijan"], ["армения", "armenia"], ["афганистан", "afghanistan"], ["бангладеш", "bangladesh"], ["бахрейн", "bahrain"], ["бруней", "brunei"], ["бутан", "bhutan"], ["восточный тимор", "east timor"], ["вьетнам", "vietnam"], ["грузия", "georgia"], ["израиль", "israel"], ["индия", "india"], ["индонезия", "indonesia"], ["иордания", "jordan"], ["ирак", "iraq"], ["иран", "iran"], ["йемен", "yemen"], ["казахстан", "kazakhstan"], ["камбоджа", "cambodia"], ["катар", "qatar"], ["киргизия", "kyrgyzstan"], ["китай", "china"], ["кувейт", "kuwait"], ["лаос", "laos"], ["ливан", "lebanon"], ["малайзия", "malaysia"], ["мальдивы", "maldives"], ["монголия", "mongolia"], ["мьянма", "myanmar"], ["непал", "nepal"], ["оаэ", "uae"], ["оман", "oman"], ["пакистан", "pakistan"], ["россия", "russia"], ["саудовская аравия", "saudi arabia"], ["северная корея", "north korea"], ["сингапур", "singapore"], ["сирия", "syria"], ["таджикистан", "tajikistan"], ["таиланд", "thailand"], ["тайва́нь", "taiwan"], ["туркмения", "turkmenistan"], ["турция", "turkey"], ["узбекистан", "uzbekistan"], ["филиппины", "philippines"], ["шри-ланка", "sri lanka"], ["южная корея", "south korea"], ["южная осетия", "south ossetia"], ["япония", "japan"], ["алжир", "algeria"], ["ангола", "angola"], ["бенин", "benin"], ["ботсвана", "botswana"], ["буркина фасо", "burkina faso"], ["бурунди", "burundi"], ["габон", "gabon"], ["гамбия", "gambia"], ["гана", "ghana"], ["гвинея", "guinea"], ["гвинея-бисау", "guinea-bissau"], ["джибути", "djibouti"], ["египет", "egypt"], ["замбия", "zambia"], ["зимбабве", "zimbabwe"], ["кабо-верде", "cape verde"], ["камерун", "cameroon"], ["кения", "kenya"], ["коморы", "comoros"], ["демократическая республика конго", "democratic republic of the congo"], ["республика конго", "republic of the congo"], ["кот-д’ивуар", "côte d'ivoire"], ["лесото", "lesotho"], ["либерия", "liberia"], ["ливия", "libya"], ["маврикий", "mauritius"], ["мавритания", "mauritania"], ["мадагаскар", "madagascar"], ["малави", "malawi"], ["мали", "mali"], ["марокко", "morocco"], ["мозамбик", "mozambique"], ["намибия", "namibia"], ["нигер", "niger"], ["нигерия", "nigeria"], ["руанда", "rwanda"], ["сан-томе и принсипи", "sao tome and principe"], ["свазиленд", "swaziland"], ["сейшелы", "seychelles"], ["сенегал", "senegal"], ["сомали", "somalia"], ["судан", "sudan"], ["сьерра-леоне", "sierra leone"], ["танзания", "tanzania"], ["того", "togo"], ["тунис", "tunisia"], ["уганда", "uganda"], ["центральноафриканская республика", "central african republic"], ["чад", "chad"], ["экваториальная гвинея", "equatorial guinea"], ["эритрея", "eritrea"], ["эфиопия", "ethiopia"], ["южно-африканская республика", "south africa"], ["австрия", "austria"], ["албания", "albania"], ["андорра", "andorra"], ["англия", "england"], ["белоруссия", "belarus"], ["бельгия", " belgium"], ["болгария", "bulgaria"], ["босния и герцеговина", "bosnia and herzegovina"], ["ватикан", "vatican"], ["великобритания", "great britain"], ["венгрия", "hungary"], ["германия", "germany"], ["греция", "greece"], ["дания", "denmark"], ["ирландия", "ireland"], ["исландия", "iceland"], ["испания", "spain"], ["италия", "italy"], ["кипр", "cyprus"], ["косово", "kosovo"], ["латвия", "latvia"], ["литва", "lithuania"], ["лихтенштейн", "liechtenstein"], ["люксембург", "luxembourg"], ["македония", "macedonia"], ["мальта", "malta"], ["молдавия", "moldova"], ["монако", "monaco"], ["нидерланды", "netherlands"], ["норвегия", "norway"], ["польша", "poland"], ["португалия", "portugal"], ["россия", "russia"], ["румыния", "romania"], ["сан-марино", "san marino"], ["сербия", "serbia"], ["словакия", "slovakia"], ["словения", "slovenia"], ["северного кипра", "northern cyprus"], ["северная ирландия", "northern ireland"], ["турция", "turkey"], ["украина", "ukraine"], ["уэльс", "wales"], ["финляндия", "finland"], ["франция", "france"], ["хорватия", "croatia"], ["черногория", "montenegro"], ["чехия", "czech republic"], ["швейцария", "switzerland"], ["швеция", "sweden"], ["шотландия", "scotland"], ["эстония", "estonia"], ["антигуа и барбуда", "antigua and barbuda"], ["багамы", "bahamas"], ["барбадос", "barbados"], ["белиз", "belize"], ["гаити", "haiti"], ["гватемала", "guatemala"], ["гондурас", "honduras"], ["гренада", "grenada"], ["доминика", "dominica"], ["доминиканская республика", "dominican republic"], ["канада", "canada"], ["коста-рика", "costa rica"], ["мексика", "mexico"], ["никарагуа", "nicaragua"], ["панама", "panama"], ["сальвадор", "el salvador"], ["сент-люсия", "saint lucia"], ["сент-винсент и гренадины", " saint vincent and the grenadines"], ["сент-китс и невис", "saint kitts and nevis"], ["соединённые штаты америки (сша)", "united states of america (usa)"], ["тринидад и тобаго", "trinidad and tobago"], ["ямайка", "jamaica"], ["аргентина", "argentina"], ["бразилия", "brazil"], ["боливия", "bolivia"], ["венесуэла", "venezuela"], ["гайана", "guyana"], ["колумбия", "colombia"], ["парагвай", "paraguay"], ["перу", "peru"], ["суринам", "suriname"], ["уругвай", "uruguay"], ["французская гвиана", "french guiana"], ["чили", "chile"], ["эквадор", "ecuador"]];
+var map = /*#__PURE__*/new Map(pairs);
+function translate(name) {
+  var key = strip(name).toLowerCase();
+  return map.get(key);
+}
+
 var trimEnd = /*#__PURE__*/require("lodash/trimEnd");
 
 var trimStart = /*#__PURE__*/require("lodash/trimStart");
@@ -1227,14 +1234,6 @@ function translate_gender(val) {
   return val;
 }
 
-function translate_counry(val) {
-  val = strip(val); // r = dictcom.translate(val)
-  // if r is not None and len(r['tran']) > 0:
-  //     return r['tran'][0].lower()
-
-  return val;
-}
-
 function parse_from(s) {
   if (!s) {
     return undefined;
@@ -1252,7 +1251,7 @@ function parse_from(s) {
   };
 
   if (a.length === 2) {
-    result.country = translate_counry(a[1]);
+    result.country = translate(a[1]);
   }
 
   return result;
@@ -1391,23 +1390,23 @@ var howjsay = {
   type: "audio",
   name: "howjsay",
   url: "https://howjsay.com",
-  getData: function getData(_ref) {
+  makeUrl: function makeUrl(_ref) {
+    var text = _ref.text;
+    return "/mp3/" + encodeURIComponent(text) + ".mp3";
+  },
+  getData: function getData(url) {
     return _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
-      var text, url;
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              text = _ref.text;
-              url = "https://howjsay.com/mp3/" + encodeURIComponent(text) + ".mp3"; // TODO check url exists
-
               return _context.abrupt("return", {
                 audio: [{
                   url: url
                 }]
               });
 
-            case 3:
+            case 1:
             case "end":
               return _context.stop();
           }
@@ -2403,7 +2402,7 @@ function _parse() {
 function makeParser(source) {
   return /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(_ref) {
-      var text, lang, query, data, url, engine, results;
+      var text, lang, query, url, data, result, engine, results;
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -2414,69 +2413,69 @@ function makeParser(source) {
                 text: text,
                 lang: lang || "en"
               };
-
-              if (!source.getData) {
-                _context.next = 14;
-                break;
-              }
-
-              _context.prev = 3;
-              _context.next = 6;
-              return source.getData(query);
-
-            case 6:
-              data = _context.sent;
-              return _context.abrupt("return", {
-                source: takeMeta(source),
-                data: data
-              });
-
-            case 10:
-              _context.prev = 10;
-              _context.t0 = _context["catch"](3);
-              console.log("error", source.name, _context.t0);
-              return _context.abrupt("return", {
-                source: {
-                  name: source.name,
-                  url: source.url
-                },
-                error: _context.t0
-              });
-
-            case 14:
               url = source.makeUrl(query);
 
               if (url.startsWith("/")) {
                 url = source.url + url;
               }
 
-              _context.prev = 16;
-              _context.next = 19;
+              if (!source.getData) {
+                _context.next = 18;
+                break;
+              }
+
+              _context.prev = 5;
+              _context.next = 8;
+              return source.getData(url, query);
+
+            case 8:
+              data = _context.sent;
+              result = {
+                source: takeMeta(source),
+                data: data
+              };
+              result.source.url = url;
+              return _context.abrupt("return", result);
+
+            case 14:
+              _context.prev = 14;
+              _context.t0 = _context["catch"](5);
+              console.log("error", source.name, _context.t0);
+              return _context.abrupt("return", {
+                source: takeMeta(source),
+                error: _context.t0
+              });
+
+            case 18:
+              _context.prev = 18;
+              _context.next = 21;
               return makeEngine(source.engine, url);
 
-            case 19:
+            case 21:
               engine = _context.sent;
-              results = parse(source, engine);
-              return _context.abrupt("return", results);
+              _context.next = 24;
+              return parse(source, engine);
 
             case 24:
-              _context.prev = 24;
-              _context.t1 = _context["catch"](16);
+              results = _context.sent;
+              results.source.url = url;
+              return _context.abrupt("return", results);
+
+            case 29:
+              _context.prev = 29;
+              _context.t1 = _context["catch"](18);
               console.log("error", source.name, _context.t1);
               return _context.abrupt("return", {
-                source: {
-                  name: source.name,
-                  url: source.url
-                },
+                source: takeMeta(source),
                 error: _context.t1
               });
 
-            case 28:
+            case 33:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 10], [16, 24]]);
+      }, _callee, null, [[5, 14], [18, 29]]);
     }));
 
     return function (_x3) {
@@ -2484,7 +2483,6 @@ function makeParser(source) {
     };
   }();
 }
-
 function fetchData(query, options) {
   if (options === void 0) {
     options = {};
@@ -2515,5 +2513,6 @@ function fetchData(query, options) {
 }
 
 exports.fetchData = fetchData;
+exports.makeParser = makeParser;
 exports.sources = sources;
 //# sourceMappingURL=lingua-scraper.cjs.development.js.map
