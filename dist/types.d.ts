@@ -20,11 +20,16 @@ export declare type SourceMeta = {
     name: string;
     url: string;
 };
+export declare type Page = {
+    url: string;
+    plan: ExecutionPlan[];
+};
 export declare type Source = SourceMeta & {
     makeUrl?(query: Query): string;
     engine?: EngineType;
     plan?: ExecutionPlan[];
     getData?(url: string, query?: Query): Promise<any>;
+    makePages?(query: Query): Page[];
 };
 export interface IElement {
     getAttribute(name: string): Promise<string>;

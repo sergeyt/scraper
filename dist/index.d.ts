@@ -10,12 +10,12 @@ declare type ParseResult = {
     };
     error?: any;
 };
-export declare function makeParser(source: Source): ({ text, lang }: Query) => Promise<ParseResult>;
+export declare function makeParser(source: Source): ({ text, lang }: Query) => Promise<ParseResult[]>;
 declare type Options = {
     type?: SourceType;
     sources?: Source[];
     include?: string[];
     exclude?: string[];
 };
-export declare function fetchData(query: Query, options?: Options): Promise<ParseResult[]>;
+export declare function fetchData(query: Query, options?: Options): Promise<ParseResult[][]>;
 export {};

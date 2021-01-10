@@ -1494,55 +1494,77 @@ var webster = {
   }]
 };
 
+var map$1 = /*#__PURE__*/require("lodash/map");
+
 var header = "div.page div.dictionary div.pos-header";
-var body = "div.page div.dictionary div.pos-body"; // TODO get translations
+var body = "div.page div.dictionary div.pos-body";
+var dictionaries = {
+  ru: "english-russian",
+  fr: "english-french",
+  de: "english-german"
+};
+
+function makeUrl(text, dictionary) {
+  var t = encodeURIComponent(text.replace(" ", "-"));
+  return "/dictionary/" + dictionary + "/" + t;
+} // TODO handle different languages
+
 
 var cambridge = {
   type: "universal",
   name: "cambridge",
   url: "https://dictionary.cambridge.org",
-  makeUrl: function makeUrl(_ref) {
+  makePages: function makePages(_ref) {
     var text = _ref.text;
-    var txt = text.replace(" ", "-");
-    return "/dictionary/english/" + txt;
-  },
-  plan: [{
-    // TODO extract region too
-    selector: header + " span.dpron-i amp-audio source",
-    audio: ["@src"]
-  }, {
-    selector: header + " span.dpron-i span.ipa",
-    term: "transcription"
-  }, {
-    selector: header + " .posgram .pos",
-    term: "tag"
-  }, {
-    selector: header + " .posgram .gram .gc",
-    term: "tag",
-    map: function map(c) {
-      var codes = {
-        C: "countable",
-        U: "uncountable",
-        S: "singular"
+    return [{
+      url: makeUrl(text, "english"),
+      plan: [{
+        // TODO extract region too
+        selector: header + " span.dpron-i amp-audio source",
+        audio: ["@src"]
+      }, {
+        selector: header + " span.dpron-i span.ipa",
+        term: "transcription"
+      }, {
+        selector: header + " .posgram .pos",
+        term: "tag"
+      }, {
+        selector: header + " .posgram .gram .gc",
+        term: "tag",
+        map: function map(c) {
+          var codes = {
+            C: "countable",
+            U: "uncountable",
+            S: "singular"
+          };
+          return codes[c] || undefined;
+        }
+      }, {
+        selector: body + " div.def-block div.def",
+        term: "definition"
+      }, {
+        selector: body + " div.def-block amp-img",
+        visual: ["@src"]
+      }, {
+        selector: body + " div.def-block span.eg",
+        term: "in"
+      }, {
+        selector: "div.page div.dataset span.deg",
+        term: "in"
+      }, {
+        selector: "div.page div.dataset div.cpegs div.lbb a.hdib",
+        term: "collocation"
+      }]
+    }].concat(map$1(dictionaries, function (d, lang) {
+      return {
+        url: makeUrl(text, d),
+        plan: [{
+          selector: ".sense-body .trans",
+          term: "translated_as@" + lang
+        }]
       };
-      return codes[c] || undefined;
-    }
-  }, {
-    selector: body + " div.def-block div.def",
-    term: "definition"
-  }, {
-    selector: body + " div.def-block amp-img",
-    visual: ["@src"]
-  }, {
-    selector: body + " div.def-block span.eg",
-    term: "in"
-  }, {
-    selector: "div.page div.dataset span.deg",
-    term: "in"
-  }, {
-    selector: "div.page div.dataset div.cpegs div.lbb a.hdib",
-    term: "collocation"
-  }]
+    }));
+  }
 };
 
 var trimEnd$1 = /*#__PURE__*/require("lodash/trimEnd");
@@ -1975,12 +1997,12 @@ function takeMeta(source) {
   };
 }
 
-function parse(_x, _x2) {
-  return _parse.apply(this, arguments);
+function executePlan(_x, _x2, _x3) {
+  return _executePlan.apply(this, arguments);
 }
 
-function _parse() {
-  _parse = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(source, root) {
+function _executePlan() {
+  _executePlan = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(engine, plan, source) {
     var data, ensureSet, collect, is_excluded, term_handler, get_values, audio_handler, visual_handler, parse_handler, _iterator4, _step4, item;
 
     return runtime_1.wrap(function _callee7$(_context7) {
@@ -2006,7 +2028,7 @@ function _parse() {
                         ensureSet(key);
                         content = key ? data[key] : undefined;
                         _context2.next = 4;
-                        return root.$$(item.selector);
+                        return engine.$$(item.selector);
 
                       case 4:
                         elements = _context2.sent;
@@ -2060,7 +2082,7 @@ function _parse() {
                 }, _callee2);
               }));
 
-              return function collect(_x4, _x5, _x6) {
+              return function collect(_x8, _x9, _x10) {
                 return _ref3.apply(this, arguments);
               };
             }();
@@ -2144,7 +2166,7 @@ function _parse() {
                 }, _callee3);
               }));
 
-              return function term_handler(_x7, _x8) {
+              return function term_handler(_x11, _x12) {
                 return _ref4.apply(this, arguments);
               };
             }();
@@ -2272,7 +2294,7 @@ function _parse() {
                 }, _callee4);
               }));
 
-              return function get_values(_x9, _x10, _x11) {
+              return function get_values(_x13, _x14, _x15) {
                 return _ref5.apply(this, arguments);
               };
             }();
@@ -2297,7 +2319,7 @@ function _parse() {
                 }, _callee5);
               }));
 
-              return function audio_handler(_x12, _x13) {
+              return function audio_handler(_x16, _x17) {
                 return _ref6.apply(this, arguments);
               };
             }();
@@ -2322,7 +2344,7 @@ function _parse() {
                 }, _callee6);
               }));
 
-              return function visual_handler(_x14, _x15) {
+              return function visual_handler(_x18, _x19) {
                 return _ref7.apply(this, arguments);
               };
             }();
@@ -2331,7 +2353,7 @@ function _parse() {
               return item.parse(elem);
             };
 
-            _iterator4 = _createForOfIteratorHelperLoose(source.plan);
+            _iterator4 = _createForOfIteratorHelperLoose(plan);
 
           case 10:
             if ((_step4 = _iterator4()).done) {
@@ -2394,7 +2416,7 @@ function _parse() {
 
           case 32:
             return _context7.abrupt("return", {
-              source: takeMeta(source),
+              source: source,
               data: mapValues(data, function (v) {
                 return Array.from(v);
               })
@@ -2407,13 +2429,48 @@ function _parse() {
       }
     }, _callee7);
   }));
-  return _parse.apply(this, arguments);
+  return _executePlan.apply(this, arguments);
+}
+
+function processUrl(_x4, _x5, _x6) {
+  return _processUrl.apply(this, arguments);
+}
+
+function _processUrl() {
+  _processUrl = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(url, plan, source) {
+    var engine, result;
+    return runtime_1.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            _context8.next = 2;
+            return makeEngine(source.engine, url);
+
+          case 2:
+            engine = _context8.sent;
+            _context8.next = 5;
+            return executePlan(engine, plan, takeMeta(source));
+
+          case 5:
+            result = _context8.sent;
+            result.source.url = url;
+            return _context8.abrupt("return", result);
+
+          case 8:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _processUrl.apply(this, arguments);
 }
 
 function makeParser(source) {
   return /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(_ref) {
-      var text, lang, query, url, data, result, engine, results;
+      var text, lang, query, results, url, data, result, _result;
+
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -2424,6 +2481,28 @@ function makeParser(source) {
                 text: text,
                 lang: lang || "en"
               };
+
+              if (!source.makePages) {
+                _context.next = 7;
+                break;
+              }
+
+              _context.next = 5;
+              return Promise.all(source.makePages(query).map(function (page) {
+                var url = page.url;
+
+                if (url.startsWith("/")) {
+                  url = source.url + url;
+                }
+
+                return processUrl(url, page.plan, source);
+              }));
+
+            case 5:
+              results = _context.sent;
+              return _context.abrupt("return", results);
+
+            case 7:
               url = source.makeUrl(query);
 
               if (url.startsWith("/")) {
@@ -2431,65 +2510,59 @@ function makeParser(source) {
               }
 
               if (!source.getData) {
-                _context.next = 18;
+                _context.next = 23;
                 break;
               }
 
-              _context.prev = 5;
-              _context.next = 8;
+              _context.prev = 10;
+              _context.next = 13;
               return source.getData(url, query);
 
-            case 8:
+            case 13:
               data = _context.sent;
               result = {
                 source: takeMeta(source),
                 data: data
               };
               result.source.url = url;
-              return _context.abrupt("return", result);
+              return _context.abrupt("return", [result]);
 
-            case 14:
-              _context.prev = 14;
-              _context.t0 = _context["catch"](5);
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](10);
               console.log("error", source.name, _context.t0);
-              return _context.abrupt("return", {
+              return _context.abrupt("return", [{
                 source: takeMeta(source),
                 error: _context.t0
-              });
+              }]);
 
-            case 18:
-              _context.prev = 18;
-              _context.next = 21;
-              return makeEngine(source.engine, url);
+            case 23:
+              _context.prev = 23;
+              _context.next = 26;
+              return processUrl(url, source.plan, source);
 
-            case 21:
-              engine = _context.sent;
-              _context.next = 24;
-              return parse(source, engine);
+            case 26:
+              _result = _context.sent;
+              return _context.abrupt("return", [_result]);
 
-            case 24:
-              results = _context.sent;
-              results.source.url = url;
-              return _context.abrupt("return", results);
-
-            case 29:
-              _context.prev = 29;
-              _context.t1 = _context["catch"](18);
+            case 30:
+              _context.prev = 30;
+              _context.t1 = _context["catch"](23);
               console.log("error", source.name, _context.t1);
-              return _context.abrupt("return", {
+              return _context.abrupt("return", [{
                 source: takeMeta(source),
                 error: _context.t1
-              });
+              }]);
 
-            case 33:
+            case 34:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[5, 14], [18, 29]]);
+      }, _callee, null, [[10, 19], [23, 30]]);
     }));
 
-    return function (_x3) {
+    return function (_x7) {
       return _ref2.apply(this, arguments);
     };
   }();
