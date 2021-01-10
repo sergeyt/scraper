@@ -15,7 +15,14 @@ import webster from "./sources/webster";
 import cambridge from "./sources/cambridge";
 import urban from "./sources/urban";
 
-import { IEngine, Source, Query, SourceType, SourceMeta } from "./types";
+import {
+  IEngine,
+  Source,
+  Query,
+  SourceType,
+  SourceMeta,
+  ExecutionPlan,
+} from "./types";
 import { makeEngine } from "./factory";
 
 export const sources: Source[] = [
@@ -48,7 +55,11 @@ type ParseResult = {
   error?: any;
 };
 
-async function parse(source: Source, root: IEngine): Promise<ParseResult> {
+async function executePlan(
+  engine: IEngine,
+  plan: ExecutionPlan[],
+  source: SourceMeta
+): Promise<ParseResult> {
   const data = {};
 
   const ensureSet = (key) => {
@@ -60,7 +71,7 @@ async function parse(source: Source, root: IEngine): Promise<ParseResult> {
   const collect = async (key, item, extract) => {
     ensureSet(key);
     const content = key ? data[key] : undefined;
-    const elements = await root.$$(item.selector);
+    const elements = await engine.$$(item.selector);
     for (const element of elements) {
       const values = await extract(item, element);
       if (!isArray(values)) {
@@ -164,7 +175,7 @@ async function parse(source: Source, root: IEngine): Promise<ParseResult> {
 
   const parse_handler = (item, elem) => item.parse(elem);
 
-  for (const item of source.plan) {
+  for (const item of plan) {
     if (item.term) {
       await collect(item.term, item, term_handler);
     } else if (item.audio) {
@@ -177,15 +188,36 @@ async function parse(source: Source, root: IEngine): Promise<ParseResult> {
   }
 
   return {
-    source: takeMeta(source),
+    source,
     data: mapValues(data, (v) => Array.from(v)),
   };
 }
 
+async function processUrl(url: string, plan: ExecutionPlan[], source: Source) {
+  const engine = await makeEngine(source.engine, url);
+  const result = await executePlan(engine, plan, takeMeta(source));
+  result.source.url = url;
+  return result;
+}
+
 export function makeParser(source: Source) {
-  return async ({ text, lang }: Query): Promise<ParseResult> => {
+  return async ({ text, lang }: Query): Promise<ParseResult[]> => {
     // TODO auto detect lang
     const query = { text, lang: lang || "en" };
+
+    if (source.makePages) {
+      const results = await Promise.all(
+        source.makePages(query).map((page) => {
+          let url = page.url;
+          if (url.startsWith("/")) {
+            url = source.url + url;
+          }
+          return processUrl(url, page.plan, source);
+        })
+      );
+      return results;
+    }
+
     let url = source.makeUrl(query);
     if (url.startsWith("/")) {
       url = source.url + url;
@@ -196,21 +228,19 @@ export function makeParser(source: Source) {
         const data = await source.getData(url, query);
         const result = { source: takeMeta(source), data };
         result.source.url = url;
-        return result;
+        return [result];
       } catch (error) {
         console.log("error", source.name, error);
-        return { source: takeMeta(source), error };
+        return [{ source: takeMeta(source), error }];
       }
     }
 
     try {
-      const engine = await makeEngine(source.engine, url);
-      const results = await parse(source, engine);
-      results.source.url = url;
-      return results;
+      const result = await processUrl(url, source.plan, source);
+      return [result];
     } catch (error) {
       console.log("error", source.name, error);
-      return { source: takeMeta(source), error };
+      return [{ source: takeMeta(source), error }];
     }
   };
 }
