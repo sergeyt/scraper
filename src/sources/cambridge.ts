@@ -1,4 +1,4 @@
-import map from "lodash/map";
+const map = require("lodash/map");
 import { Source } from "../types";
 
 const header = "div.page div.dictionary div.pos-header";
