@@ -29,8 +29,8 @@ import { makeEngine } from "./factory";
 export const sources: Source[] = [
   unsplash,
   //wordnik,
-  macmillan,
   webster,
+  macmillan,
   cambridge,
   urban,
   forvo,

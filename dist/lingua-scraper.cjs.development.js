@@ -1772,7 +1772,7 @@ var isEmpty$1 = /*#__PURE__*/require("lodash/isEmpty");
 
 var flatten = /*#__PURE__*/require("lodash/flatten");
 var sources = [unsplash, //wordnik,
-macmillan, webster, cambridge, urban, forvo, howjsay];
+webster, macmillan, cambridge, urban, forvo, howjsay];
 
 function takeMeta(source) {
   return {
