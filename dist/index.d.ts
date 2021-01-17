@@ -17,5 +17,5 @@ declare type Options = {
     include?: string[];
     exclude?: string[];
 };
-export declare function fetchData(query: Query, options?: Options): Promise<ParseResult[][]>;
+export declare function fetchData(query: Query, options?: Options): Promise<any>;
 export {};

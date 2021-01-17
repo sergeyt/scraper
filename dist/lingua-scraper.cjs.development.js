@@ -866,21 +866,6 @@ var unsplash = {
   }]
 };
 
-var wordnik = {
-  type: "universal",
-  engine: "playwright",
-  name: "wordnik",
-  url: "https://www.wordnik.com",
-  makeUrl: function makeUrl(_ref) {
-    var text = _ref.text;
-    return "/words/" + text;
-  },
-  plan: [{
-    selector: ".flickr-module .thumbs img",
-    visual: ["@src"]
-  }]
-};
-
 var macmillan = {
   type: "universal",
   name: "macmillan",
@@ -1591,209 +1576,6 @@ var urban = {
   }]
 };
 
-var EngineStub = /*#__PURE__*/function () {
-  function EngineStub() {}
-
-  var _proto = EngineStub.prototype;
-
-  _proto.$$ = function $$(selector) {
-    return Promise.resolve([]);
-  };
-
-  _proto.close = function close() {
-    return Promise.resolve(undefined);
-  };
-
-  return EngineStub;
-}();
-
-var ElementImpl = /*#__PURE__*/function () {
-  function ElementImpl(page, elem) {
-    this.page = page;
-    this.elem = elem;
-  }
-
-  var _proto2 = ElementImpl.prototype;
-
-  _proto2.$$ = /*#__PURE__*/function () {
-    var _$$ = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(selector) {
-      var _this = this;
-
-      var elems;
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return this.elem.$$(selector);
-
-            case 2:
-              elems = _context.sent;
-              return _context.abrupt("return", elems.map(function (e) {
-                return new ElementImpl(_this.page, e);
-              }));
-
-            case 4:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function $$(_x) {
-      return _$$.apply(this, arguments);
-    }
-
-    return $$;
-  }();
-
-  _proto2.getAttribute = function getAttribute(name) {
-    return this.elem.getAttribute(name);
-  };
-
-  _proto2.textContent = function textContent() {
-    return this.elem.textContent();
-  };
-
-  return ElementImpl;
-}();
-
-var EngineImpl = /*#__PURE__*/function () {
-  function EngineImpl(browser, page) {
-    this.browser = browser;
-    this.page = page;
-  }
-
-  var _proto3 = EngineImpl.prototype;
-
-  _proto3.$$ = /*#__PURE__*/function () {
-    var _$$2 = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(selector) {
-      var _this2 = this;
-
-      var elems;
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return this.page.waitForSelector(selector, {
-                timeout: 5000
-              });
-
-            case 3:
-              _context2.next = 7;
-              break;
-
-            case 5:
-              _context2.prev = 5;
-              _context2.t0 = _context2["catch"](0);
-
-            case 7:
-              _context2.next = 9;
-              return this.page.$$(selector);
-
-            case 9:
-              elems = _context2.sent;
-              return _context2.abrupt("return", elems.map(function (e) {
-                return new ElementImpl(_this2.page, e);
-              }));
-
-            case 11:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this, [[0, 5]]);
-    }));
-
-    function $$(_x2) {
-      return _$$2.apply(this, arguments);
-    }
-
-    return $$;
-  }();
-
-  _proto3.close = /*#__PURE__*/function () {
-    var _close = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
-      return runtime_1.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return this.page.close();
-
-            case 2:
-              _context3.next = 4;
-              return this.browser.close();
-
-            case 4:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, this);
-    }));
-
-    function close() {
-      return _close.apply(this, arguments);
-    }
-
-    return close;
-  }();
-
-  return EngineImpl;
-}();
-
-function makePlaywrightEngine(_x3) {
-  return _makePlaywrightEngine.apply(this, arguments);
-}
-
-function _makePlaywrightEngine() {
-  _makePlaywrightEngine = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(url) {
-    var _require, chromium, browser, page;
-
-    return runtime_1.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            if (!IS_BROWSER) {
-              _context4.next = 2;
-              break;
-            }
-
-            return _context4.abrupt("return", new EngineStub());
-
-          case 2:
-            // TODO support other browser
-            _require = require("playwright"), chromium = _require.chromium;
-            _context4.next = 5;
-            return chromium.launch();
-
-          case 5:
-            browser = _context4.sent;
-            _context4.next = 8;
-            return browser.newPage();
-
-          case 8:
-            page = _context4.sent;
-            _context4.next = 11;
-            return page["goto"](url);
-
-          case 11:
-            return _context4.abrupt("return", new EngineImpl(browser, page));
-
-          case 12:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-  return _makePlaywrightEngine.apply(this, arguments);
-}
-
 var _require = /*#__PURE__*/require("fetch-ponyfill")(),
     fetch = _require.fetch;
 
@@ -1968,11 +1750,11 @@ function _makeCheerioEngine() {
   return _makeCheerioEngine.apply(this, arguments);
 }
 
+// import { makePlaywrightEngine } from './playwright';
 function makeEngine(type, url) {
-  if (type === "playwright") {
-    return makePlaywrightEngine(url);
-  }
-
+  // if (type === "playwright") {
+  //     return makePlaywrightEngine(url);
+  // }
   return makeCheerioEngine(url);
 }
 
@@ -1987,7 +1769,10 @@ var isNil = /*#__PURE__*/require("lodash/isNil");
 var mapValues = /*#__PURE__*/require("lodash/mapValues");
 
 var isEmpty$1 = /*#__PURE__*/require("lodash/isEmpty");
-var sources = [unsplash, wordnik, macmillan, webster, cambridge, urban, forvo, howjsay];
+
+var flatten = /*#__PURE__*/require("lodash/flatten");
+var sources = [unsplash, //wordnik,
+macmillan, webster, cambridge, urban, forvo, howjsay];
 
 function takeMeta(source) {
   return {
@@ -2593,7 +2378,9 @@ function fetchData(query, options) {
   });
   return Promise.all(src.map(makeParser).map(function (fn) {
     return fn(query);
-  }));
+  })).then(function (a) {
+    return flatten(a);
+  });
 }
 
 exports.fetchData = fetchData;
