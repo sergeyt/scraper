@@ -30,7 +30,7 @@ describe("russian countries", () => {
   xit("extract from russian lessons", async (done) => {
     const parser = makeParser(source);
     const results = await parser({ text: "" });
-    const text = JSON.stringify(results.data.pair, null, "  ");
+    const text = JSON.stringify(results[0].data.pair, null, "  ");
     console.log(text);
     done();
   });

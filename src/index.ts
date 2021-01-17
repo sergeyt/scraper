@@ -4,10 +4,11 @@ const isString = require("lodash/isString");
 const isNil = require("lodash/isNil");
 const mapValues = require("lodash/mapValues");
 const isEmpty = require("lodash/isEmpty");
+const flatten = require("lodash/flatten");
 import { strip } from "./utils";
 
 import unsplash from "./sources/unsplash";
-import wordnik from "./sources/wordnik";
+//import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 import howjsay from "./sources/howjsay";
@@ -27,7 +28,7 @@ import { makeEngine } from "./factory";
 
 export const sources: Source[] = [
   unsplash,
-  wordnik,
+  //wordnik,
   macmillan,
   webster,
   cambridge,
@@ -280,5 +281,7 @@ export function fetchData(query: Query, options: Options = {}) {
       }
       return true;
     });
-  return Promise.all(src.map(makeParser).map((fn) => fn(query)));
+  return Promise.all(src.map(makeParser).map((fn) => fn(query))).then((a) =>
+    flatten(a)
+  );
 }
