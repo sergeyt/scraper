@@ -8,6 +8,12 @@ export declare type ExecutionPlan = {
     parse?: (elem: IElement) => Promise<any[]>;
     lstrip?: string;
     map?: (s: string) => string;
+    obj?: {
+        key: string;
+        plan: {
+            [s: string]: ExecutionPlan;
+        };
+    };
 };
 export declare type EngineType = "playwright" | "cheerio";
 export declare type Query = {
@@ -34,10 +40,9 @@ export declare type Source = SourceMeta & {
 export interface IElement {
     getAttribute(name: string): Promise<string>;
     textContent(): Promise<string>;
-    $$(selector: string): Promise<IElement[]>;
+    querySelectorAll(selector: string): Promise<IElement[]>;
 }
-export interface IEngine {
-    $$(selector: string): Promise<IElement[]>;
+export interface IEngine extends IElement {
     close(): Promise<void>;
 }
 export {};

@@ -1272,7 +1272,7 @@ var forvo = {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return elem.$$("span.play");
+                return elem.querySelectorAll("span.play");
 
               case 2:
                 btn = _context.sent[0];
@@ -1316,7 +1316,7 @@ var forvo = {
                   url: url
                 };
                 _context.next = 19;
-                return elem.$$("span.ofLink");
+                return elem.querySelectorAll("span.ofLink");
 
               case 19:
                 author = _context.sent[0];
@@ -1338,7 +1338,7 @@ var forvo = {
 
               case 25:
                 _context.next = 27;
-                return elem.$$("span.from");
+                return elem.querySelectorAll("span.from");
 
               case 27:
                 from = _context.sent[0];
@@ -1581,6 +1581,24 @@ var _require = /*#__PURE__*/require("fetch-ponyfill")(),
 
 var cheerio = /*#__PURE__*/require("cheerio");
 
+function makeElements($, found, filter) {
+  if (filter === void 0) {
+    filter = function filter() {
+      return true;
+    };
+  }
+
+  var result = [];
+  found.each(function (i, elem) {
+    if (!filter(elem)) {
+      return;
+    }
+
+    result.push(new CheerioElement($, $(elem)));
+  });
+  return result;
+}
+
 var CheerioElement = /*#__PURE__*/function () {
   function CheerioElement($, elem) {
     this.$ = $;
@@ -1589,23 +1607,36 @@ var CheerioElement = /*#__PURE__*/function () {
 
   var _proto = CheerioElement.prototype;
 
-  _proto.$$ = /*#__PURE__*/function () {
-    var _$$ = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(selector) {
-      var _this = this;
+  _proto.querySelectorAll = function querySelectorAll(selector) {
+    return Promise.resolve(this.querySelectorAllImpl(selector));
+  };
 
-      var $, result;
+  _proto.querySelectorAllImpl = function querySelectorAllImpl(selector) {
+    if (selector === "#children") {
+      var children = this.elem.children();
+      return makeElements(this.$, children);
+    }
+
+    if (selector === "#text") {
+      var _children = this.elem.contents();
+
+      return makeElements(this.$, _children, function (e) {
+        return e.type === "text";
+      });
+    }
+
+    return makeElements(this.$, this.elem.find(selector));
+  };
+
+  _proto.getAttribute = /*#__PURE__*/function () {
+    var _getAttribute = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(name) {
       return runtime_1.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              $ = this.elem.find(selector);
-              result = [];
-              $.each(function (i, elem) {
-                result.push(new CheerioElement(_this.$, _this.$(elem)));
-              });
-              return _context.abrupt("return", result);
+              return _context.abrupt("return", this.elem.attr(name));
 
-            case 4:
+            case 1:
             case "end":
               return _context.stop();
           }
@@ -1613,30 +1644,7 @@ var CheerioElement = /*#__PURE__*/function () {
       }, _callee, this);
     }));
 
-    function $$(_x) {
-      return _$$.apply(this, arguments);
-    }
-
-    return $$;
-  }();
-
-  _proto.getAttribute = /*#__PURE__*/function () {
-    var _getAttribute = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(name) {
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              return _context2.abrupt("return", this.elem.attr(name));
-
-            case 1:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this);
-    }));
-
-    function getAttribute(_x2) {
+    function getAttribute(_x) {
       return _getAttribute.apply(this, arguments);
     }
 
@@ -1644,19 +1652,19 @@ var CheerioElement = /*#__PURE__*/function () {
   }();
 
   _proto.textContent = /*#__PURE__*/function () {
-    var _textContent = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
-      return runtime_1.wrap(function _callee3$(_context3) {
+    var _textContent = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
+      return runtime_1.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              return _context3.abrupt("return", this.elem.text());
+              return _context2.abrupt("return", this.elem.text());
 
             case 1:
             case "end":
-              return _context3.stop();
+              return _context2.stop();
           }
         }
-      }, _callee3, this);
+      }, _callee2, this);
     }));
 
     function textContent() {
@@ -1676,34 +1684,36 @@ var CheerioEngine = /*#__PURE__*/function () {
 
   var _proto2 = CheerioEngine.prototype;
 
-  _proto2.$$ = function $$(selector) {
-    var _this2 = this;
-
-    var $ = this.$(selector);
-    var result = [];
-    $.each(function (i, elem) {
-      result.push(new CheerioElement(_this2.$, _this2.$(elem)));
-    });
-    return Promise.resolve(result);
+  _proto2.querySelectorAll = function querySelectorAll(selector) {
+    var found = this.$(selector);
+    return Promise.resolve(makeElements(this.$, found));
   };
 
   _proto2.close = function close() {
     return Promise.resolve(undefined);
   };
 
+  _proto2.getAttribute = function getAttribute(name) {
+    return Promise.resolve("");
+  };
+
+  _proto2.textContent = function textContent() {
+    return Promise.resolve("");
+  };
+
   return CheerioEngine;
 }();
 
-function makeCheerioEngine(_x3) {
+function makeCheerioEngine(_x2) {
   return _makeCheerioEngine.apply(this, arguments);
 }
 
 function _makeCheerioEngine() {
-  _makeCheerioEngine = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(url) {
+  _makeCheerioEngine = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(url) {
     var headers, resp, html;
-    return runtime_1.wrap(function _callee4$(_context4) {
+    return runtime_1.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             if (IS_BROWSER) {
               url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
@@ -1717,35 +1727,35 @@ function _makeCheerioEngine() {
               headers["User-Agent"] = "lingua-bot";
             }
 
-            _context4.next = 5;
+            _context3.next = 5;
             return fetch(url, {
               headers: headers
             });
 
           case 5:
-            resp = _context4.sent;
+            resp = _context3.sent;
 
             if (resp.ok) {
-              _context4.next = 8;
+              _context3.next = 8;
               break;
             }
 
             throw new Error(resp.statusText);
 
           case 8:
-            _context4.next = 10;
+            _context3.next = 10;
             return resp.text();
 
           case 10:
-            html = _context4.sent;
-            return _context4.abrupt("return", new CheerioEngine(html));
+            html = _context3.sent;
+            return _context3.abrupt("return", new CheerioEngine(html));
 
           case 12:
           case "end":
-            return _context4.stop();
+            return _context3.stop();
         }
       }
-    }, _callee4);
+    }, _callee3);
   }));
   return _makeCheerioEngine.apply(this, arguments);
 }
@@ -1782,17 +1792,17 @@ function takeMeta(source) {
   };
 }
 
-function executePlan(_x, _x2, _x3) {
-  return _executePlan.apply(this, arguments);
+function executePlanImpl(_x, _x2) {
+  return _executePlanImpl.apply(this, arguments);
 }
 
-function _executePlan() {
-  _executePlan = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(engine, plan, source) {
-    var data, ensureSet, collect, is_excluded, term_handler, get_values, audio_handler, visual_handler, parse_handler, _iterator4, _step4, item;
+function _executePlanImpl() {
+  _executePlanImpl = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(root, plan) {
+    var data, ensureSet, collect, is_excluded, term_handler, get_values, audio_handler, visual_handler, parse_handler, _loop, _iterator4, _step4;
 
-    return runtime_1.wrap(function _callee7$(_context7) {
+    return runtime_1.wrap(function _callee9$(_context10) {
       while (1) {
-        switch (_context7.prev = _context7.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
             data = {};
 
@@ -1813,7 +1823,7 @@ function _executePlan() {
                         ensureSet(key);
                         content = key ? data[key] : undefined;
                         _context2.next = 4;
-                        return engine.$$(item.selector);
+                        return root.querySelectorAll(item.selector);
 
                       case 4:
                         elements = _context2.sent;
@@ -1867,7 +1877,7 @@ function _executePlan() {
                 }, _callee2);
               }));
 
-              return function collect(_x8, _x9, _x10) {
+              return function collect(_x10, _x11, _x12) {
                 return _ref3.apply(this, arguments);
               };
             }();
@@ -1951,7 +1961,7 @@ function _executePlan() {
                 }, _callee3);
               }));
 
-              return function term_handler(_x11, _x12) {
+              return function term_handler(_x13, _x14) {
                 return _ref4.apply(this, arguments);
               };
             }();
@@ -2079,7 +2089,7 @@ function _executePlan() {
                 }, _callee4);
               }));
 
-              return function get_values(_x13, _x14, _x15) {
+              return function get_values(_x15, _x16, _x17) {
                 return _ref5.apply(this, arguments);
               };
             }();
@@ -2104,7 +2114,7 @@ function _executePlan() {
                 }, _callee5);
               }));
 
-              return function audio_handler(_x16, _x17) {
+              return function audio_handler(_x18, _x19) {
                 return _ref6.apply(this, arguments);
               };
             }();
@@ -2129,7 +2139,7 @@ function _executePlan() {
                 }, _callee6);
               }));
 
-              return function visual_handler(_x18, _x19) {
+              return function visual_handler(_x20, _x21) {
                 return _ref7.apply(this, arguments);
               };
             }();
@@ -2138,115 +2148,232 @@ function _executePlan() {
               return item.parse(elem);
             };
 
+            _loop = /*#__PURE__*/runtime_1.mark(function _loop() {
+              var item, elements, results;
+              return runtime_1.wrap(function _loop$(_context9) {
+                while (1) {
+                  switch (_context9.prev = _context9.next) {
+                    case 0:
+                      item = _step4.value;
+
+                      if (!item.term) {
+                        _context9.next = 6;
+                        break;
+                      }
+
+                      _context9.next = 4;
+                      return collect(item.term, item, term_handler);
+
+                    case 4:
+                      _context9.next = 29;
+                      break;
+
+                    case 6:
+                      if (!item.audio) {
+                        _context9.next = 11;
+                        break;
+                      }
+
+                      _context9.next = 9;
+                      return collect("audio", item, audio_handler);
+
+                    case 9:
+                      _context9.next = 29;
+                      break;
+
+                    case 11:
+                      if (!item.visual) {
+                        _context9.next = 16;
+                        break;
+                      }
+
+                      _context9.next = 14;
+                      return collect("visual", item, visual_handler);
+
+                    case 14:
+                      _context9.next = 29;
+                      break;
+
+                    case 16:
+                      if (!item.parse) {
+                        _context9.next = 21;
+                        break;
+                      }
+
+                      _context9.next = 19;
+                      return collect(undefined, item, parse_handler);
+
+                    case 19:
+                      _context9.next = 29;
+                      break;
+
+                    case 21:
+                      if (!item.obj) {
+                        _context9.next = 29;
+                        break;
+                      }
+
+                      _context9.next = 24;
+                      return root.querySelectorAll(item.selector);
+
+                    case 24:
+                      elements = _context9.sent;
+                      _context9.next = 27;
+                      return Promise.all(elements.map( /*#__PURE__*/function () {
+                        var _ref8 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(elem) {
+                          var items;
+                          return runtime_1.wrap(function _callee8$(_context8) {
+                            while (1) {
+                              switch (_context8.prev = _context8.next) {
+                                case 0:
+                                  _context8.next = 2;
+                                  return Promise.all(Object.keys(item.obj.plan).map( /*#__PURE__*/function () {
+                                    var _ref9 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(k) {
+                                      var p;
+                                      return runtime_1.wrap(function _callee7$(_context7) {
+                                        while (1) {
+                                          switch (_context7.prev = _context7.next) {
+                                            case 0:
+                                              p = item.obj.plan[k];
+                                              _context7.next = 3;
+                                              return executePlanImpl(elem, [p]);
+
+                                            case 3:
+                                              return _context7.abrupt("return", _context7.sent);
+
+                                            case 4:
+                                            case "end":
+                                              return _context7.stop();
+                                          }
+                                        }
+                                      }, _callee7);
+                                    }));
+
+                                    return function (_x23) {
+                                      return _ref9.apply(this, arguments);
+                                    };
+                                  }()));
+
+                                case 2:
+                                  items = _context8.sent;
+                                  return _context8.abrupt("return", items.reduce(function (a, b) {
+                                    return Object.assign(a, b);
+                                  }, {}));
+
+                                case 4:
+                                case "end":
+                                  return _context8.stop();
+                              }
+                            }
+                          }, _callee8);
+                        }));
+
+                        return function (_x22) {
+                          return _ref8.apply(this, arguments);
+                        };
+                      }()));
+
+                    case 27:
+                      results = _context9.sent;
+                      data[item.obj.key] = results;
+
+                    case 29:
+                    case "end":
+                      return _context9.stop();
+                  }
+                }
+              }, _loop);
+            });
             _iterator4 = _createForOfIteratorHelperLoose(plan);
 
-          case 10:
+          case 11:
             if ((_step4 = _iterator4()).done) {
-              _context7.next = 32;
+              _context10.next = 15;
               break;
             }
 
-            item = _step4.value;
+            return _context10.delegateYield(_loop(), "t0", 13);
 
-            if (!item.term) {
-              _context7.next = 17;
-              break;
-            }
-
-            _context7.next = 15;
-            return collect(item.term, item, term_handler);
+          case 13:
+            _context10.next = 11;
+            break;
 
           case 15:
-            _context7.next = 30;
-            break;
+            return _context10.abrupt("return", mapValues(data, function (v) {
+              return Array.from(v);
+            }));
 
-          case 17:
-            if (!item.audio) {
-              _context7.next = 22;
-              break;
-            }
-
-            _context7.next = 20;
-            return collect("audio", item, audio_handler);
-
-          case 20:
-            _context7.next = 30;
-            break;
-
-          case 22:
-            if (!item.visual) {
-              _context7.next = 27;
-              break;
-            }
-
-            _context7.next = 25;
-            return collect("visual", item, visual_handler);
-
-          case 25:
-            _context7.next = 30;
-            break;
-
-          case 27:
-            if (!item.parse) {
-              _context7.next = 30;
-              break;
-            }
-
-            _context7.next = 30;
-            return collect(undefined, item, parse_handler);
-
-          case 30:
-            _context7.next = 10;
-            break;
-
-          case 32:
-            return _context7.abrupt("return", {
-              source: source,
-              data: mapValues(data, function (v) {
-                return Array.from(v);
-              })
-            });
-
-          case 33:
+          case 16:
           case "end":
-            return _context7.stop();
+            return _context10.stop();
         }
       }
-    }, _callee7);
+    }, _callee9);
+  }));
+  return _executePlanImpl.apply(this, arguments);
+}
+
+function executePlan(_x3, _x4, _x5) {
+  return _executePlan.apply(this, arguments);
+}
+
+function _executePlan() {
+  _executePlan = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10(root, plan, source) {
+    var data;
+    return runtime_1.wrap(function _callee10$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            _context11.next = 2;
+            return executePlanImpl(root, plan);
+
+          case 2:
+            data = _context11.sent;
+            return _context11.abrupt("return", {
+              source: source,
+              data: data
+            });
+
+          case 4:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee10);
   }));
   return _executePlan.apply(this, arguments);
 }
 
-function processUrl(_x4, _x5, _x6) {
+function processUrl(_x6, _x7, _x8) {
   return _processUrl.apply(this, arguments);
 }
 
 function _processUrl() {
-  _processUrl = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(url, plan, source) {
+  _processUrl = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(url, plan, source) {
     var engine, result;
-    return runtime_1.wrap(function _callee8$(_context8) {
+    return runtime_1.wrap(function _callee11$(_context12) {
       while (1) {
-        switch (_context8.prev = _context8.next) {
+        switch (_context12.prev = _context12.next) {
           case 0:
-            _context8.next = 2;
+            _context12.next = 2;
             return makeEngine(source.engine, url);
 
           case 2:
-            engine = _context8.sent;
-            _context8.next = 5;
+            engine = _context12.sent;
+            _context12.next = 5;
             return executePlan(engine, plan, takeMeta(source));
 
           case 5:
-            result = _context8.sent;
+            result = _context12.sent;
             result.source.url = url;
-            return _context8.abrupt("return", result);
+            return _context12.abrupt("return", result);
 
           case 8:
           case "end":
-            return _context8.stop();
+            return _context12.stop();
         }
       }
-    }, _callee8);
+    }, _callee11);
   }));
   return _processUrl.apply(this, arguments);
 }
@@ -2347,7 +2474,7 @@ function makeParser(source) {
       }, _callee, null, [[10, 19], [23, 30]]);
     }));
 
-    return function (_x7) {
+    return function (_x9) {
       return _ref2.apply(this, arguments);
     };
   }();
@@ -2383,7 +2510,70 @@ function fetchData(query, options) {
   });
 }
 
+var categories = [{
+  name: "Color / Visual",
+  words: ["see", "look", "color", "dark", "light", "beautiful", "shade", "black", "blue", "brown", "clear", "gray", "green", "orange", "red", "yellow", "white", "brass", "copper", "gold", "silver", "sky"]
+}, {
+  name: "Direction",
+  words: ["about", "across", "after", "against", "among", "at", "between", "by", "in", "with", "through", "forward", "here", "over", "under", "up", "down", "on", "off", "with", "direction", "distance", "north", "south", "east", "west", "left", "right", "front", "back", "high", "low", "far", "near"]
+}, {
+  name: "Time",
+  words: ["about", "after", "at", "before", "between", "till", "while", "when", "again", "ever", "now", "still", "tomorrow", "yesterday", "second", "minute", "day", "week", "month", "year", "fall", "spring", "winter", "summer", "night", "time", "clock", "first", "second", "last", "morning", "night", "early", "late", "slow", "quick"]
+}, {
+  name: "Animals",
+  words: ["animal", "ant", "bee", "bird", "cat", "cow", "dog", "egg", "fish", "fly", "fowl", "goat", "horse", "insect", "monkey", "pig", "rat", "sheep", "snake", "sponge", "worm", "silk", "worm"]
+}, {
+  name: "Food and Drink",
+  words: ["apple", "berry", "bread", "butter", "cake", "cheese", "drink", "egg", "food", "fish", "fruit", "grain", "meal", "meat", "milk", "nut", "orange", "potato", "rice", "root", "salt", "seed", "soup", "sugar", "water", "wine", "alcohol", "beef", "beer", "champagne", "chocolate", "citron", "coffee", "cocktail", "cognac", "liqueur", "macaroni", "olive", "omelet", "rum", "salad", "sardine", "tapioca", "tea", "toast", "vanila", "vodka", "whisky"]
+}, {
+  name: "Household",
+  words: ["building", "bread", "butter", "canvas", "cloth", "coal", "cook", "drink", "family", "food", "linen", "meal", "meat", "milk", "money", "play", "rice", "room", "silk", "sleep", "soup", "step", "sugar", "vessel", "walk", "wash", "wine", "wool", "basket", "bath", "bed", "bell", "blade", "board", "book", "boot", "bottle", "box", "brick", "brush", "bucket", "bulb", "button", "cake", "camera", "card", "cart", "carriage", "chain", "cheese", "chest", "clock", "coat", "collar", "comb", "cord", "cup", "curtain", "cushion", "door", "drain", "drawer", "dress", "flag", "floor", "fork", "frame", "glove", "hat", "jewel", "kettle", "key", "knife", "knot", "lock", "map", "match", "nail", "needle", "oven", "parcel", "pen", "pencil", "picture", "pin", "pipe", "plate", "plow", "pot", "pump", "rail", "ring", "rod", "roof", "screw", "shelf", "shirt", "shoe", "skirt", "sock", "spade", "sponge", "spoon", "stamp", "stick", "stocking", "table", "thread", "ticket", "tray", "trousers", "umbrella", "wall", "watch", "wheel", "whip", "whistle", "window", "wire"]
+}, {
+  name: "Clothes :",
+  words: ["boot", "button", "coat", "collar", "dress", "glove", "hat", "shirt", "shoe", "silk", "skirt", "sock", "stocking", "trousers", "umbrella", "watch"]
+}, {
+  name: "Tools :",
+  words: ["band", "blade", "brush", "bucket", "cord", "gun", "hammer", "hook", "knife", "knot", "nail", "needle", "pin", "pipe", "plow", "pump", "ring", "rod", "screw", "spade", "wheel", "wire"]
+}, {
+  name: "Buildings :",
+  words: ["bridge", "building", "church", "hospital", "house", "library", "prison", "school", "structure", "station", "store", "street", "town", "train", "wall"]
+}, {
+  name: "People :",
+  words: ["baby", "boy", "daughter", "family", "father", "female", "friend", "girl", "male", "man", "married", "mother", "person", "relation", "self", "sister", "son", "woman", "chief", "cook", "manager", "porter", "secretary", "servant", "work", "roof"]
+}, {
+  name: "Body Parts :",
+  words: ["arm", "body", "bone", "brain", "chest", "chin", "ear", "eye", "face", "fat", "feather", "finger", "foot", "hair", "hand", "head", "heart", "horn", "knee", "leg", "lip", "mind", "mouth", "muscle", "neck", "nerve", "nose", "skin", "stomach", "tail", "throat", "thumb", "toe", "tongue", "tooth", "wing", "cough", "dead", "death", "disease", "feeble", "ill", "pain", "sneeze"]
+}, {
+  name: "Materials :",
+  words: ["brass", "copper", "glass", "gold", "iron", "leather", "material", "metal", "silver", "steel", "tin", "wood", "brick", "canvas", "cloth", "coal", "linen", "silk", "tree", "wool"]
+}, {
+  name: "Transport :",
+  words: ["boat", "bridge", "carriage", "flight", "harbor", "sail", "sea", "train", "transport", "plane", "rail", "river", "road", "wheel", "whistle"]
+}, {
+  name: "Business / Industry",
+  words: ["agreement", "business", "committee", "company", "competition", "credit", "debt", "development", "distribution", "division", "exchange", "expansion", "growth", "harbor", "industry", "instrument", "interest", "invention", "market", "manager", "money", "office", "oil", "operation", "owner", "payment", "plant", "produce", "profit", "system", "trade", "transport"]
+}, {
+  name: "Education",
+  words: ["art", "authority", "chalk", "development", "direction", "education", "encylopedia", "growth", "history", "ink", "language", "law", "learning", "letter", "music", "news", "paint", "paper", "paste", "pen", "pencil", "reading", "reason", "religion", "rule", "say", "science", "school", "scissors", "square", "stamp", "talk", "teaching", "test", "theory", "thought", "word", "writing"]
+}, {
+  name: "Political",
+  words: ["act", "agreement", "authority", "committee", "control", "country", "crime", "debt", "decision", "discussion", "distribution", "division", "education", "government", "history", "judge", "language", "law", "meeting", "nation", "office", "order", "organization", "political", "power", "property", "protest", "punishment", "record", "religion", "representative", "secretary", "society", "tax"]
+}, {
+  name: "War",
+  words: ["army", "attack", "boat", "company", "control", "country", "crush", "damage", "death", "destruction", "division", "earth", "effect", "event", "fight", "fire", "flame", "general", "gun", "light", "force", "harbor", "land", "map", "military", "operation", "order", "organization", "peace", "plane", "position", "powder", "power", "push", "range", "river", "road", "sea", "smash", "support", "vessel", "war"]
+}, {
+  name: "Agriculture / Nature",
+  words: ["air", "animal", "cheese", "cloud", "cotton", "dust", "earth", "field", "farm", "fruit", "garden", "grain", "growth", "ice", "land", "leaf", "leather", "meat", "milk", "mist", "moon", "mountain", "natural", "nut", "plant", "plow", "price", "process", "produce", "rain", "range", "rice", "river", "road", "salt", "sand", "seed", "sky", "slope", "snow", "spade", "star", "stream", "sun", "thunder", "water", "weather", "wind"]
+}, {
+  name: "Mathematics",
+  words: ["addition", "amount", "division", "greater", "less", "number", "power", "product", "root", "times", "angle", "arch", "ball", "circle", "cord", "curve", "line", "plane", "point", "square", "solid", "square"]
+}];
+var ogden = {
+  categories: categories
+};
+
 exports.fetchData = fetchData;
 exports.makeParser = makeParser;
+exports.ogden = ogden;
 exports.sources = sources;
 //# sourceMappingURL=lingua-scraper.cjs.development.js.map
