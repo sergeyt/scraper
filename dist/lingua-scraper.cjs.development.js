@@ -2529,25 +2529,25 @@ var categories = [{
   name: "Household",
   words: ["building", "bread", "butter", "canvas", "cloth", "coal", "cook", "drink", "family", "food", "linen", "meal", "meat", "milk", "money", "play", "rice", "room", "silk", "sleep", "soup", "step", "sugar", "vessel", "walk", "wash", "wine", "wool", "basket", "bath", "bed", "bell", "blade", "board", "book", "boot", "bottle", "box", "brick", "brush", "bucket", "bulb", "button", "cake", "camera", "card", "cart", "carriage", "chain", "cheese", "chest", "clock", "coat", "collar", "comb", "cord", "cup", "curtain", "cushion", "door", "drain", "drawer", "dress", "flag", "floor", "fork", "frame", "glove", "hat", "jewel", "kettle", "key", "knife", "knot", "lock", "map", "match", "nail", "needle", "oven", "parcel", "pen", "pencil", "picture", "pin", "pipe", "plate", "plow", "pot", "pump", "rail", "ring", "rod", "roof", "screw", "shelf", "shirt", "shoe", "skirt", "sock", "spade", "sponge", "spoon", "stamp", "stick", "stocking", "table", "thread", "ticket", "tray", "trousers", "umbrella", "wall", "watch", "wheel", "whip", "whistle", "window", "wire"]
 }, {
-  name: "Clothes :",
+  name: "Clothes",
   words: ["boot", "button", "coat", "collar", "dress", "glove", "hat", "shirt", "shoe", "silk", "skirt", "sock", "stocking", "trousers", "umbrella", "watch"]
 }, {
-  name: "Tools :",
+  name: "Tools",
   words: ["band", "blade", "brush", "bucket", "cord", "gun", "hammer", "hook", "knife", "knot", "nail", "needle", "pin", "pipe", "plow", "pump", "ring", "rod", "screw", "spade", "wheel", "wire"]
 }, {
-  name: "Buildings :",
+  name: "Buildings",
   words: ["bridge", "building", "church", "hospital", "house", "library", "prison", "school", "structure", "station", "store", "street", "town", "train", "wall"]
 }, {
-  name: "People :",
+  name: "People",
   words: ["baby", "boy", "daughter", "family", "father", "female", "friend", "girl", "male", "man", "married", "mother", "person", "relation", "self", "sister", "son", "woman", "chief", "cook", "manager", "porter", "secretary", "servant", "work", "roof"]
 }, {
-  name: "Body Parts :",
+  name: "Body Parts",
   words: ["arm", "body", "bone", "brain", "chest", "chin", "ear", "eye", "face", "fat", "feather", "finger", "foot", "hair", "hand", "head", "heart", "horn", "knee", "leg", "lip", "mind", "mouth", "muscle", "neck", "nerve", "nose", "skin", "stomach", "tail", "throat", "thumb", "toe", "tongue", "tooth", "wing", "cough", "dead", "death", "disease", "feeble", "ill", "pain", "sneeze"]
 }, {
-  name: "Materials :",
+  name: "Materials",
   words: ["brass", "copper", "glass", "gold", "iron", "leather", "material", "metal", "silver", "steel", "tin", "wood", "brick", "canvas", "cloth", "coal", "linen", "silk", "tree", "wool"]
 }, {
-  name: "Transport :",
+  name: "Transport",
   words: ["boat", "bridge", "carriage", "flight", "harbor", "sail", "sea", "train", "transport", "plane", "rail", "river", "road", "wheel", "whistle"]
 }, {
   name: "Business / Industry",
