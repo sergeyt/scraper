@@ -56,7 +56,7 @@ describe("basic english word list", () => {
     const results = await parser({ text: "" });
     let count = 0;
     const categories = results[0].data.categories.map((c) => {
-      const name = c.name[0];
+      const name = _.trim(_.trimEnd(c.name[0], ":"));
       let words = c.words;
       if (name === "Mathematics") {
         const i = words.findIndex((s) => s.startsWith("Back to :"));

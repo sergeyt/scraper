@@ -312,7 +312,7 @@
     ]
   },
   {
-    "name": "Clothes :",
+    "name": "Clothes",
     "words": [
       "boot",
       "button",
@@ -333,7 +333,7 @@
     ]
   },
   {
-    "name": "Tools :",
+    "name": "Tools",
     "words": [
       "band",
       "blade",
@@ -360,7 +360,7 @@
     ]
   },
   {
-    "name": "Buildings :",
+    "name": "Buildings",
     "words": [
       "bridge",
       "building",
@@ -380,7 +380,7 @@
     ]
   },
   {
-    "name": "People :",
+    "name": "People",
     "words": [
       "baby",
       "boy",
@@ -411,7 +411,7 @@
     ]
   },
   {
-    "name": "Body Parts :",
+    "name": "Body Parts",
     "words": [
       "arm",
       "body",
@@ -460,7 +460,7 @@
     ]
   },
   {
-    "name": "Materials :",
+    "name": "Materials",
     "words": [
       "brass",
       "copper",
@@ -485,7 +485,7 @@
     ]
   },
   {
-    "name": "Transport :",
+    "name": "Transport",
     "words": [
       "boat",
       "bridge",
