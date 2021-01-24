@@ -3,6 +3,21 @@ const cheerio = require("cheerio");
 import { IElement, IEngine } from "./types";
 import { IS_BROWSER } from "./utils";
 
+function makeElements(
+  $: cheerio.Root,
+  found: cheerio.Cheerio,
+  filter: (e: cheerio.Element) => boolean = () => true
+): IElement[] {
+  const result = [];
+  found.each((i, elem) => {
+    if (!filter(elem)) {
+      return;
+    }
+    result.push(new CheerioElement($, $(elem)));
+  });
+  return result;
+}
+
 class CheerioElement implements IElement {
   $: cheerio.Root;
   elem: cheerio.Cheerio;
@@ -12,13 +27,22 @@ class CheerioElement implements IElement {
     this.elem = elem;
   }
 
-  async $$(selector: string): Promise<IElement[]> {
-    const $ = this.elem.find(selector);
-    const result = [];
-    $.each((i, elem) => {
-      result.push(new CheerioElement(this.$, this.$(elem)));
-    });
-    return result;
+  querySelectorAll(selector: string): Promise<IElement[]> {
+    return Promise.resolve(this.querySelectorAllImpl(selector));
+  }
+
+  querySelectorAllImpl(selector: string): IElement[] {
+    if (selector === "#children") {
+      const children = this.elem.children();
+      return makeElements(this.$, children);
+    }
+    if (selector === "#text") {
+      const children = this.elem.contents();
+      return makeElements(this.$, children, (e) => {
+        return e.type === "text";
+      });
+    }
+    return makeElements(this.$, this.elem.find(selector));
   }
 
   async getAttribute(name: string): Promise<string> {
@@ -37,17 +61,21 @@ class CheerioEngine implements IEngine {
     this.$ = cheerio.load(html);
   }
 
-  $$(selector: string): Promise<IElement[]> {
-    const $ = this.$(selector);
-    const result = [];
-    $.each((i, elem) => {
-      result.push(new CheerioElement(this.$, this.$(elem)));
-    });
-    return Promise.resolve(result);
+  querySelectorAll(selector: string): Promise<IElement[]> {
+    const found = this.$(selector);
+    return Promise.resolve(makeElements(this.$, found));
   }
 
   close(): Promise<void> {
     return Promise.resolve(undefined);
+  }
+
+  getAttribute(name: string): Promise<string> {
+    return Promise.resolve("");
+  }
+
+  textContent(): Promise<string> {
+    return Promise.resolve("");
   }
 }
 

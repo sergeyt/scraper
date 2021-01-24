@@ -3,12 +3,20 @@ import { IEngine, IElement } from "./types";
 import { IS_BROWSER } from "./utils";
 
 class EngineStub implements IEngine {
-  $$(selector: string): Promise<IElement[]> {
+  querySelectorAll(selector: string): Promise<IElement[]> {
     return Promise.resolve([]);
   }
 
   close(): Promise<void> {
     return Promise.resolve(undefined);
+  }
+
+  getAttribute(name: string): Promise<string> {
+    return Promise.resolve("");
+  }
+
+  textContent(): Promise<string> {
+    return Promise.resolve("");
   }
 }
 
@@ -21,7 +29,7 @@ class ElementImpl implements IElement {
     this.elem = elem;
   }
 
-  async $$(selector: string): Promise<IElement[]> {
+  async querySelectorAll(selector: string): Promise<IElement[]> {
     const elems = await this.elem.$$(selector);
     return elems.map((e) => new ElementImpl(this.page, e));
   }
@@ -44,7 +52,7 @@ class EngineImpl implements IEngine {
     this.page = page;
   }
 
-  async $$(selector: string): Promise<IElement[]> {
+  async querySelectorAll(selector: string): Promise<IElement[]> {
     try {
       await this.page.waitForSelector(selector, {
         timeout: 5000,
@@ -57,6 +65,14 @@ class EngineImpl implements IEngine {
   async close(): Promise<void> {
     await this.page.close();
     await this.browser.close();
+  }
+
+  getAttribute(name: string): Promise<string> {
+    return Promise.resolve("");
+  }
+
+  textContent(): Promise<string> {
+    return Promise.resolve("");
   }
 }
 

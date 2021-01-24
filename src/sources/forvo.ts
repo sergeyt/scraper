@@ -65,7 +65,7 @@ const forvo: Source = {
     {
       selector: "article.pronunciations ul.show-all-pronunciations li",
       parse: async (elem: IElement) => {
-        const btn = (await elem.$$("span.play"))[0];
+        const btn = (await elem.querySelectorAll("span.play"))[0];
         if (!btn) {
           return undefined;
         }
@@ -81,7 +81,7 @@ const forvo: Source = {
 
         const result: any = { url };
 
-        const author = (await elem.$$("span.ofLink"))[0];
+        const author = (await elem.querySelectorAll("span.ofLink"))[0];
         if (author) {
           const val = await author.getAttribute("data-p2");
           if (val) {
@@ -89,7 +89,7 @@ const forvo: Source = {
           }
         }
 
-        const from = (await elem.$$("span.from"))[0];
+        const from = (await elem.querySelectorAll("span.from"))[0];
         if (from) {
           const d = parse_from(await from.textContent());
           if (d) {

@@ -1,4 +1,4 @@
-import { fetchData } from "../index";
+import { fetchData } from "../parse";
 
 describe("scraper", () => {
   it("can scrap apple", async (done) => {

@@ -1,5 +1,5 @@
 import { Source } from "../types";
-import { makeParser } from "../index";
+import { makeParser } from "../parse";
 
 const source: Source = {
   type: "text",

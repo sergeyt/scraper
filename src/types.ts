@@ -9,6 +9,12 @@ export type ExecutionPlan = {
   parse?: (elem: IElement) => Promise<any[]>;
   lstrip?: string;
   map?: (s: string) => string;
+  obj?: {
+    key: string;
+    plan: {
+      [s: string]: ExecutionPlan;
+    };
+  };
 };
 
 export type EngineType = "playwright" | "cheerio";
@@ -39,11 +45,10 @@ export type Source = SourceMeta & {
 export interface IElement {
   getAttribute(name: string): Promise<string>;
   textContent(): Promise<string>;
-  $$(selector: string): Promise<IElement[]>;
+  // Finds all elements matching specified selector
+  querySelectorAll(selector: string): Promise<IElement[]>;
 }
 
-export interface IEngine {
-  // Finds all elements matching specified selector
-  $$(selector: string): Promise<IElement[]>;
+export interface IEngine extends IElement {
   close(): Promise<void>;
 }

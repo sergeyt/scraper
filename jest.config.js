@@ -3,6 +3,6 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
-  testMatch: ["**/__tests__/(*.)+(spec|test).[jt]s?(x)"],
+  testMatch: ["**/__tests__/**/(*.)+(spec|test).[jt]s?(x)"],
   collectCoverage: false,
 };
