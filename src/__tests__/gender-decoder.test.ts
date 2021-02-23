@@ -3,6 +3,11 @@ import { unparse } from "papaparse";
 import { Source } from "../types";
 import { makeParser } from "../parse";
 
+function fix(s: string) {
+  s = _.trimEnd(s);
+  return s.replace(/-/g, "");
+}
+
 const source: Source = {
   type: "text",
   name: "gender-decoder",
@@ -12,12 +17,12 @@ const source: Source = {
     {
       selector: "#masculine li",
       term: "masculine",
-      map: (s) => _.trimEnd(s, "-"),
+      map: fix,
     },
     {
       selector: "#feminine li",
       term: "feminine",
-      map: (s) => _.trimEnd(s, "-"),
+      map: fix,
     },
   ],
 };
