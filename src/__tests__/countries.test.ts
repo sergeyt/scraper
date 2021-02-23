@@ -10,8 +10,8 @@ const source: Source = {
     {
       selector: "article p.nobreak",
       parse: async (elem) => {
-        const rus = (await elem.$$("span.rus"))[0];
-        const eng = (await elem.$$("span.eng"))[0];
+        const rus = (await elem.querySelectorAll("span.rus"))[0];
+        const eng = (await elem.querySelectorAll("span.eng"))[0];
         if (!rus || !eng) {
           return undefined;
         }
