@@ -5,6 +5,8 @@ import { makeParser } from "../..";
 import { Source } from "../../types";
 import { order_by_freq } from "../utils";
 
+const prettier = require("prettier");
+
 const wikipedia: Source = {
   type: "text",
   name: "simple.wikipedia",
@@ -71,7 +73,12 @@ describe("basic english word list", () => {
     });
     const ranked = order_by_freq(categories);
     const json = JSON.stringify(ranked, null, "  ");
-    dump("ogden-categories.json", json + "\n");
+    const code = prettier.format(`
+const categories = ${json};
+
+export const ogden = { categories };
+`);
+    dump("../../data/ogden.ts", code);
     console.log(count);
     console.log(json);
   });

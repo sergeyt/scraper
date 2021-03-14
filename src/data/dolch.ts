@@ -1,6 +1,6 @@
 const categories = [
   {
-    name: "pre-primer",
+    name: "Pre-primer",
     words: [
       {
         text: "and",
@@ -165,7 +165,7 @@ const categories = [
     ],
   },
   {
-    name: "primer",
+    name: "Primer",
     words: [
       {
         text: "on",
@@ -378,7 +378,7 @@ const categories = [
     ],
   },
   {
-    name: "grade-1",
+    name: "1th Grade",
     words: [
       {
         text: "as",
@@ -547,7 +547,7 @@ const categories = [
     ],
   },
   {
-    name: "grade-2",
+    name: "2nd Grade",
     words: [
       {
         text: "would",
@@ -736,7 +736,7 @@ const categories = [
     ],
   },
   {
-    name: "grade-3",
+    name: "3rd Grade",
     words: [
       {
         text: "about",
@@ -905,7 +905,7 @@ const categories = [
     ],
   },
   {
-    name: "nouns",
+    name: "Nouns",
     words: [
       {
         text: "way",
@@ -1291,6 +1291,4 @@ const categories = [
   },
 ];
 
-export const dolch = {
-  categories,
-};
+export const dolch = { categories };

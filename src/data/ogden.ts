@@ -2720,6 +2720,4 @@ const categories = [
   },
 ];
 
-export const ogden = {
-  categories,
-};
+export const ogden = { categories };
