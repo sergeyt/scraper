@@ -70,16 +70,24 @@ describe("basic english word list", () => {
     });
     // taken from https://github.com/earonesty/dotfiles/blob/master/frequent.js
     const freq = require("../freq.json");
-    const ranked = categories.map((c) => ({
-      name: c.name,
-      words: c.words.map((w) => {
-        const f = freq[w];
-        return {
-          text: w,
-          freq: _.isUndefined(f) ? undefined : f,
-        };
-      }),
-    }));
+    const ranked = _.orderBy(
+      categories.map((c) => ({
+        name: c.name,
+        words: _.orderBy(
+          c.words.map((w) => {
+            const f = freq[w];
+            return {
+              text: w,
+              freq: _.isUndefined(f) ? 0 : f,
+            };
+          }),
+          (t) => t.freq,
+          "desc"
+        ),
+      })),
+      (c) => _.sumBy(c.words, (t) => t.freq),
+      "desc"
+    );
     const json = JSON.stringify(ranked, null, "  ");
     dump("ogden-categories.json", json + "\n");
     console.log(count);
