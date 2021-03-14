@@ -4541,7 +4541,7 @@ var ogden = {
 };
 
 var categories$1 = [{
-  name: "pre-primer",
+  name: "Pre-primer",
   words: [{
     text: "and",
     freq: 470825580
@@ -4664,7 +4664,7 @@ var categories$1 = [{
     freq: 0
   }]
 }, {
-  name: "primer",
+  name: "Primer",
   words: [{
     text: "on",
     freq: 90813956
@@ -4823,7 +4823,7 @@ var categories$1 = [{
     freq: 7851
   }]
 }, {
-  name: "grade-1",
+  name: "1th Grade",
   words: [{
     text: "as",
     freq: 112147741
@@ -4949,7 +4949,7 @@ var categories$1 = [{
     freq: 6415
   }]
 }, {
-  name: "grade-2",
+  name: "2nd Grade",
   words: [{
     text: "would",
     freq: 33634655
@@ -5090,7 +5090,7 @@ var categories$1 = [{
     freq: 0
   }]
 }, {
-  name: "grade-3",
+  name: "3rd Grade",
   words: [{
     text: "about",
     freq: 24412645
@@ -5216,7 +5216,7 @@ var categories$1 = [{
     freq: 4587
   }]
 }, {
-  name: "nouns",
+  name: "Nouns",
   words: [{
     text: "way",
     freq: 13342872
