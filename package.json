@@ -37,7 +37,8 @@
     "pretty-quick": "^3.1.0",
     "ts-jest": "^26.5.3",
     "tsdx": "^0.14.1",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "validator": "^13.5.2"
   },
   "peerDependencies": {
     "playwright": "^1.9.2"

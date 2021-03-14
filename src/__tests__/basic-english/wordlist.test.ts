@@ -68,8 +68,20 @@ describe("basic english word list", () => {
       count += words.length;
       return { name, words };
     });
-    const json = JSON.stringify(categories, null, "  ");
-    dump("ogden-categories.json", json);
+    // taken from https://github.com/earonesty/dotfiles/blob/master/frequent.js
+    const freq = require("../freq.json");
+    const ranked = categories.map((c) => ({
+      name: c.name,
+      words: c.words.map((w) => {
+        const f = freq[w];
+        return {
+          text: w,
+          freq: _.isUndefined(f) ? undefined : f,
+        };
+      }),
+    }));
+    const json = JSON.stringify(ranked, null, "  ");
+    dump("ogden-categories.json", json + "\n");
     console.log(count);
     console.log(json);
   });
