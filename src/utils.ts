@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 const trim = require("lodash/trim");
 
 export function strip(s?: string) {
@@ -32,6 +30,6 @@ export function splitBy(s: string, by?: string): string[] {
   }
   return (s || "")
     .split(splitter)
-    .map((t) => _.trim(t))
+    .map((t) => trim(t))
     .filter((t) => !!t);
 }
