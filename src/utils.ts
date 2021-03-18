@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const trim = require("lodash/trim");
 
 export function strip(s?: string) {
@@ -17,3 +19,19 @@ function isBrowser() {
 }
 
 export const IS_BROWSER = isBrowser();
+
+export function splitBy(s: string, by?: string): string[] {
+  let splitter: any;
+  switch (by) {
+    case ",":
+      splitter = /,/g;
+      break;
+    default:
+      splitter = /\s/g;
+      break;
+  }
+  return (s || "")
+    .split(splitter)
+    .map((t) => _.trim(t))
+    .filter((t) => !!t);
+}

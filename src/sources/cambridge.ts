@@ -77,6 +77,7 @@ const cambridge: Source = {
         {
           selector: `.sense-body .trans`,
           term: `translated_as@${lang}`,
+          splitter: ",",
         },
       ],
     })),

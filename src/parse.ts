@@ -5,7 +5,7 @@ const isNil = require("lodash/isNil");
 const mapValues = require("lodash/mapValues");
 const isEmpty = require("lodash/isEmpty");
 const flatten = require("lodash/flatten");
-import { strip } from "./utils";
+import { strip, splitBy } from "./utils";
 
 import unsplash from "./sources/unsplash";
 //import wordnik from "./sources/wordnik";
@@ -120,6 +120,8 @@ async function executePlanImpl(
     }
     if (item.map) {
       val = item.map(val);
+    } else if (item.splitter) {
+      val = splitBy(val, item.splitter);
     }
     if (!val) {
       return undefined;

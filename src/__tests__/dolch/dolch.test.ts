@@ -2,6 +2,7 @@ import _ from "lodash";
 import fs from "fs";
 import path from "path";
 import { order_by_freq } from "../utils";
+import { splitBy } from "../../utils";
 
 const prettier = require("prettier");
 
@@ -25,7 +26,7 @@ describe("dolch", () => {
     const categories = _.map(src, (s, name) => {
       return {
         name,
-        words: split_by_comma(s),
+        words: splitBy(s, ","),
       };
     });
     const ranked = order_by_freq(categories);
@@ -41,11 +42,4 @@ export const dolch = { categories };
 
 function dump(name: string, content: string) {
   fs.writeFileSync(path.resolve(__dirname, name), content);
-}
-
-export function split_by_comma(s: string): string[] {
-  return (s || "")
-    .split(/,/g)
-    .map((t) => _.trim(t))
-    .filter((t) => !!t);
 }
