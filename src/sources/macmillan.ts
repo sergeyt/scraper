@@ -17,10 +17,12 @@ const macmillan: Source = {
     {
       selector: ".PART-OF-SPEECH",
       term: "tag",
+      splitter: ",",
     },
     {
       selector: ".SYNTAX-CODING",
       term: "tag",
+      splitter: ",",
     },
     {
       selector: ".DEFINITION",

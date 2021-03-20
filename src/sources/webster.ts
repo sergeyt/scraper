@@ -35,6 +35,7 @@ const webster: Source = {
     {
       selector: "span.fl",
       term: "tag",
+      splitter: ",",
     },
   ],
 };

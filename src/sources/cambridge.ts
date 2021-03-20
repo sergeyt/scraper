@@ -36,6 +36,7 @@ const cambridge: Source = {
         {
           selector: `${header} .posgram .pos`,
           term: "tag",
+          splitter: ",",
         },
         {
           selector: `${header} .posgram .gram .gc`,
