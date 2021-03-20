@@ -57,7 +57,7 @@ function parse_from(s) {
 
 const forvo: Source = {
   type: "audio",
-  name: "forvo",
+  name: "Forvo",
   url: "https://forvo.com",
   makeUrl: ({ text, lang }) =>
     `https://ru.forvo.com/word/${encode(text)}/#${lang}`,

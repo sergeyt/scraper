@@ -18,7 +18,7 @@ function makeUrl(text: string, dictionary: string) {
 // TODO handle different languages
 const cambridge: Source = {
   type: "universal",
-  name: "cambridge",
+  name: "Cambridge Dictionary",
   url: "https://dictionary.cambridge.org",
   makePages: ({ text, lang }) => [
     {

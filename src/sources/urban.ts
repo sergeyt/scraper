@@ -4,7 +4,7 @@ import { Source } from "../types";
 
 const urban: Source = {
   type: "universal",
-  name: "urban-dictionary",
+  name: "Urban Dictionary",
   url: "https://www.urbandictionary.com",
   makeUrl: ({ text }) => `/define.php?term=${encodeURIComponent(text)}`,
   plan: [

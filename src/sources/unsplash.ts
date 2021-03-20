@@ -2,7 +2,7 @@ import { Source } from "../types";
 
 const unsplash: Source = {
   type: "visual",
-  name: "unsplash",
+  name: "Unsplash Pictures",
   url: "https://unsplash.com",
   makeUrl({ text }): string {
     const txt = text.replace(" ", "-");

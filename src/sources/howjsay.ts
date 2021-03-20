@@ -2,7 +2,7 @@ import { Source } from "../types";
 
 const howjsay: Source = {
   type: "audio",
-  name: "howjsay",
+  name: "HowJSay.com",
   url: "https://howjsay.com",
   makeUrl: ({ text }) => `/mp3/${encodeURIComponent(text)}.mp3`,
   async getData(url): Promise<any> {

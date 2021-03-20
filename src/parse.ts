@@ -8,13 +8,14 @@ const flatten = require("lodash/flatten");
 import { strip, splitBy } from "./utils";
 
 import unsplash from "./sources/unsplash";
-//import wordnik from "./sources/wordnik";
+import wordnik from "./sources/wordnik";
 import macmillan from "./sources/macmillan";
 import forvo from "./sources/forvo";
 import howjsay from "./sources/howjsay";
 import webster from "./sources/webster";
 import cambridge from "./sources/cambridge";
 import urban from "./sources/urban";
+import compromise from "./sources/compromise";
 
 import {
   Source,
@@ -28,14 +29,15 @@ import { makeEngine } from "./factory";
 
 export const sources: Source[] = [
   unsplash,
-  //wordnik,
+  wordnik,
   webster,
   macmillan,
   cambridge,
   urban,
   forvo,
   howjsay,
-];
+  compromise,
+].filter((t) => t.engine != "playwright");
 
 function takeMeta(source: Source): SourceMeta {
   return {

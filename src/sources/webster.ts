@@ -2,7 +2,7 @@ import { Source } from "../types";
 
 const webster: Source = {
   type: "universal",
-  name: "merriam-webster",
+  name: "Merriam Webster",
   url: "https://www.merriam-webster.com",
   makeUrl: ({ text }) => `/dictionary/${encodeURIComponent(text)}`,
   plan: [

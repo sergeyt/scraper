@@ -2,7 +2,7 @@ import { Source } from "../types";
 
 const macmillan: Source = {
   type: "universal",
-  name: "macmillan",
+  name: "Macmillan Dictionary",
   url: "https://www.macmillandictionary.com",
   makeUrl: ({ text }) => `/dictionary/british/${encodeURIComponent(text)}`,
   plan: [

@@ -3,7 +3,7 @@ import { Source } from "../types";
 const wordnik: Source = {
   type: "universal",
   engine: "playwright",
-  name: "wordnik",
+  name: "Wordnik",
   url: "https://www.wordnik.com",
   makeUrl: ({ text }) => `/words/${text}`,
   plan: [
