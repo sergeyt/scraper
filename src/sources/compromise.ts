@@ -1,5 +1,5 @@
-import * as _ from "lodash";
 import nlp from "compromise";
+const flatten = require("lodash/flatten");
 import { Source, Query } from "../types";
 
 const compromise: Source = {
@@ -11,7 +11,7 @@ const compromise: Source = {
   },
   async getData(url: string, query?: Query) {
     const doc = nlp(query.text);
-    const tag = _.flatten(
+    const tag = flatten(
       doc.list.map((p) => {
         const terms = p.terms();
         return terms.map((t) => {
