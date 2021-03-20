@@ -5015,6 +5015,17 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
+lingua-scraper@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/lingua-scraper/-/lingua-scraper-0.17.1.tgz#41a9253638f8cd4f55eb9f7bbf2078aa7a9eb518"
+  integrity sha512-+G4tMsGV8BRYgJCnBuoO0iIhP2BGd5tTs+cDNjzm4dV0xUw6mZu0Xb9Yo0Y184i1G8elvXK11NWPyRzF8C4W4w==
+  dependencies:
+    cheerio "^1.0.0-rc.5"
+    compromise "^13.10.4"
+    fetch-ponyfill "^7.1.0"
+    js-base64 "^3.6.0"
+    lodash "^4.17.21"
+
 load-json-file@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-2.0.0.tgz#7947e42149af80d696cbf797bcaabcfe1fe29ca8"
