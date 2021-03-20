@@ -128,7 +128,7 @@ async function executePlanImpl(
     if (!val) {
       return undefined;
     }
-    return [val];
+    return flatten([val]);
   };
 
   const get_values = async (item, elem, commands) => {
