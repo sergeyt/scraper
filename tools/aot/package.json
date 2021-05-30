@@ -1,0 +1,18 @@
+{
+  "name": "aot",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": "./main.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "lingua-scraper": "^0.17.3",
+    "lowdb": "^2.1.0",
+    "p-series": "^2.1.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "yarn build && node dist/main.js"
+  }
+}

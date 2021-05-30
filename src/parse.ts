@@ -27,6 +27,8 @@ import {
 } from "./types";
 import { makeEngine } from "./factory";
 
+const debug = require("debug")("lingua-scraper");
+
 export const sources: Source[] = [
   unsplash,
   wordnik,
@@ -249,6 +251,8 @@ export function makeParser(source: Source) {
       url = source.url + url;
     }
 
+    debug(`proc ${source.name} ${url}`);
+
     if (source.getData) {
       try {
         const data = await source.getData(url, query);
@@ -256,7 +260,7 @@ export function makeParser(source: Source) {
         result.source.url = url;
         return [result];
       } catch (error) {
-        console.log("error", source.name, error);
+        debug("error", source.name, url, error);
         return [{ source: takeMeta(source), error }];
       }
     }
@@ -265,7 +269,7 @@ export function makeParser(source: Source) {
       const result = await processUrl(url, source.plan, source);
       return [result];
     } catch (error) {
-      console.log("error", source.name, error);
+      debug("error", source.name, url, error);
       return [{ source: takeMeta(source), error }];
     }
   };

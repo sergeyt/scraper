@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsdx build --format cjs",
     "ci": "yarn test && yarn build",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "aot": "cd tools/aot && yarn start ../../db.json"
   },
   "husky": {
     "hooks": {
@@ -19,6 +20,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.9",
     "compromise": "^13.11.2",
+    "debug": "^4.3.1",
     "fetch-ponyfill": "^7.1.0",
     "js-base64": "^3.6.1",
     "lodash": "^4.17.21"
